@@ -56,6 +56,9 @@ public class UserEntity implements UserDetails {
     @Column(name = "dateOfModification")
     private LocalDateTime dateOfModification;
 
+    @Column(name = "isVerified")
+    private boolean isVerified;
+
     @Enumerated(value = EnumType.STRING)
     Role role;
 
@@ -75,7 +78,7 @@ public class UserEntity implements UserDetails {
     }
 
     public UserEntity(String institutionalEmail, String idNumber, String firstName, String lastName, String gender,
-            String password, String image, String role) {
+            String password, String image, String role, boolean isVerified) {
         this.institutionalEmail = institutionalEmail;
         this.idNumber = idNumber;
         this.firstName = firstName;
@@ -84,10 +87,11 @@ public class UserEntity implements UserDetails {
         this.password = password;
         this.image = image;
         isDeleted = false;
+        this.isVerified = false;
     }
 
     public UserEntity(String institutionalEmail, String idNumber, String firstName, String lastName, String gender,
-            String password, String role) {
+            String password, String role, boolean isVerified) {
         this.institutionalEmail = institutionalEmail;
         this.idNumber = idNumber;
         this.firstName = firstName;
@@ -95,6 +99,7 @@ public class UserEntity implements UserDetails {
         this.gender = gender;
         this.password = password;
         isDeleted = false;
+        this.isVerified = false;
     }
 
     public void setId(int id) {
@@ -216,4 +221,15 @@ public class UserEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean isVerified) {
+        this.isVerified = isVerified;
+    }
+
+    
+
 }

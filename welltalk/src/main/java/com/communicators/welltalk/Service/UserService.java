@@ -57,6 +57,7 @@ public class UserService implements UserDetailsService {
             userToUpdate.setGender(user.getGender());
             userToUpdate.setPassword(user.getPassword());
             userToUpdate.setImage(user.getImage());
+            userToUpdate.setVerified(user.isVerified());
         } catch (Exception e) {
             throw new IllegalArgumentException("User " + user.getId() + " does not exist.");
         } finally {

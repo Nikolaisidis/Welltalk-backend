@@ -44,10 +44,12 @@ public class StudentService {
             studentToUpdate.setBirthDate(student.getBirthDate());
             studentToUpdate.setContactNumber(student.getContactNumber());
             studentToUpdate.setSpecificAddress(student.getSpecificAddress());
-            studentToUpdate.setBarangay(student.getBarangay());
-            studentToUpdate.setCity(student.getCity());
-            studentToUpdate.setProvince(student.getProvince());
-            studentToUpdate.setZipCode(student.getZipCode());
+            // studentToUpdate.setBarangay(student.getBarangay());
+            // studentToUpdate.setCity(student.getCity());
+            // studentToUpdate.setProvince(student.getProvince());
+            // studentToUpdate.setZipCode(student.getZipCode());\
+            studentToUpdate.setParentGuardianName(student.getParentGuardianName());
+            studentToUpdate.setParentGuardianContactNumber(student.getParentGuardianContactNumber());
 
         } catch (Exception e) {
             throw new IllegalArgumentException("Student " + id + " does not exist.");

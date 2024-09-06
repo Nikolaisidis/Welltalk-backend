@@ -27,10 +27,13 @@ public class StudentEntity extends UserEntity {
     private String contactNumber;
 
     private String specificAddress;
-    private String barangay;
-    private String city;
-    private String province;
-    private String zipCode;
+    private String parentGuardianName;
+    private String parentGuardianContactNumber;
+    // private String barangay;
+    // private String city;
+    // private String province;
+    // private String zipCode;
+
 
     public StudentEntity() {
 
@@ -38,36 +41,40 @@ public class StudentEntity extends UserEntity {
 
     public StudentEntity(String institutionalEmail, String idNumber, String firstName, String lastName, String gender,
             String password, String image, String role, String college, String program, int year, LocalDate birthDate,
-            String contactNumber, String specificAddress, String barangay, String city, String province,
-            String zipCode) {
-        super(institutionalEmail, idNumber, firstName, lastName, gender, password, image, role);
+            String contactNumber, String specificAddress, /* String barangay, String city, String province,
+            String zipCode,*/ String parentGuardianName, String parentGuardianContactNumber) {
+        super(institutionalEmail, idNumber, firstName, lastName, gender, password, image, role, false);
         this.college = college;
         this.program = program;
         this.year = year;
         this.birthDate = birthDate;
         this.contactNumber = contactNumber;
         this.specificAddress = specificAddress;
-        this.barangay = barangay;
-        this.city = city;
-        this.province = province;
-        this.zipCode = zipCode;
+        // this.barangay = barangay;
+        // this.city = city;
+        // this.province = province;
+        // this.zipCode = zipCode;
+        this.parentGuardianContactNumber = parentGuardianContactNumber;
+        this.parentGuardianName = parentGuardianName;
     }
 
     public StudentEntity(int teacherId, String institutionalEmail, String idNumber, String firstName, String lastName,
             String gender, String password, String role, String college, String program, int year, LocalDate birthDate,
-            String contactNumber, String specificAddress, String barangay, String city, String province,
-            String zipCode) {
-        super(institutionalEmail, idNumber, firstName, lastName, gender, password, role);
+            String contactNumber, String specificAddress, /*String barangay, String city, String province,
+            String zipCode, */String parentGuardianName, String parentGuardianContactNumber) {
+        super(institutionalEmail, idNumber, firstName, lastName, gender, password, role, false);
         this.college = college;
         this.program = program;
         this.year = year;
         this.birthDate = birthDate;
         this.contactNumber = contactNumber;
         this.specificAddress = specificAddress;
-        this.barangay = barangay;
-        this.city = city;
-        this.province = province;
-        this.zipCode = zipCode;
+        // this.barangay = barangay;
+        // this.city = city;
+        // this.province = province;
+        // this.zipCode = zipCode;
+        this.parentGuardianContactNumber = parentGuardianContactNumber;
+        this.parentGuardianName = parentGuardianName;
     }
 
     public String getCollege() {
@@ -118,36 +125,52 @@ public class StudentEntity extends UserEntity {
         this.specificAddress = specificAddress;
     }
 
-    public String getBarangay() {
-        return barangay;
+    public String getParentGuardianName() {
+        return parentGuardianName;
     }
 
-    public void setBarangay(String barangay) {
-        this.barangay = barangay;
+    public void setParentGuardianName(String parentGuardianName) {
+        this.parentGuardianName = parentGuardianName;
     }
 
-    public String getCity() {
-        return city;
+    public String getParentGuardianContactNumber() {
+        return parentGuardianContactNumber;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setParentGuardianContactNumber(String parentGuardianContactNumber) {
+        this.parentGuardianContactNumber = parentGuardianContactNumber;
     }
 
-    public String getProvince() {
-        return province;
-    }
+    // public String getBarangay() {
+    //     return barangay;
+    // }
 
-    public void setProvince(String province) {
-        this.province = province;
-    }
+    // public void setBarangay(String barangay) {
+    //     this.barangay = barangay;
+    // }
 
-    public String getZipCode() {
-        return zipCode;
-    }
+    // public String getCity() {
+    //     return city;
+    // }
 
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
+    // public void setCity(String city) {
+    //     this.city = city;
+    // }
+
+    // public String getProvince() {
+    //     return province;
+    // }
+
+    // public void setProvince(String province) {
+    //     this.province = province;
+    // }
+
+    // public String getZipCode() {
+    //     return zipCode;
+    // }
+
+    // public void setZipCode(String zipCode) {
+    //     this.zipCode = zipCode;
+    // }
 
 }
