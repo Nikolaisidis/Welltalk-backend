@@ -16,9 +16,12 @@ import javax.persistence.InheritanceType;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.communicators.welltalk.Service.UserService;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -59,6 +62,28 @@ public class UserEntity implements UserDetails {
     @Column(name = "isVerified")
     private boolean isVerified;
 
+    @Column(name = "college")
+    protected String college;
+
+    @Column(name = "program")
+    private String program;
+
+    public String getCollege() {
+        return college;
+    }
+
+    public void setCollege(String college) {
+        this.college = college;
+    }
+
+    public String getProgram() {
+        return program;
+    }
+
+    public void setProgram(String program) {
+        this.program = program;
+    }
+
     @Enumerated(value = EnumType.STRING)
     Role role;
 
@@ -78,7 +103,7 @@ public class UserEntity implements UserDetails {
     }
 
     public UserEntity(String institutionalEmail, String idNumber, String firstName, String lastName, String gender,
-            String password, String image, String role, boolean isVerified) {
+            String password, String image, String role, String college, String program) {
         this.institutionalEmail = institutionalEmail;
         this.idNumber = idNumber;
         this.firstName = firstName;
@@ -88,10 +113,12 @@ public class UserEntity implements UserDetails {
         this.image = image;
         isDeleted = false;
         this.isVerified = false;
+        this.college = college;
+        this.program = program;
     }
 
     public UserEntity(String institutionalEmail, String idNumber, String firstName, String lastName, String gender,
-            String password, String role, boolean isVerified) {
+            String password, String role, String college, String program) {
         this.institutionalEmail = institutionalEmail;
         this.idNumber = idNumber;
         this.firstName = firstName;
@@ -100,6 +127,8 @@ public class UserEntity implements UserDetails {
         this.password = password;
         isDeleted = false;
         this.isVerified = false;
+        this.college = college;
+        this.program = program;
     }
 
     public void setId(int id) {
@@ -226,10 +255,15 @@ public class UserEntity implements UserDetails {
         return isVerified;
     }
 
+    @Autowired
+    private transient UserService userService;
+
     public void setVerified(boolean isVerified) {
         this.isVerified = isVerified;
+        if (isVerified) {
+            userService.mapFieldsToCounselor(this.id);
+        }
     }
-
     
 
 }

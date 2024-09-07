@@ -8,7 +8,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.communicators.welltalk.Entity.CounselorEntity;
+import com.communicators.welltalk.Entity.StudentEntity;
+import com.communicators.welltalk.Entity.TeacherEntity;
 import com.communicators.welltalk.Entity.UserEntity;
+import com.communicators.welltalk.Repository.CounselorRepository;
+import com.communicators.welltalk.Repository.StudentRepository;
+import com.communicators.welltalk.Repository.TeacherRepository;
 import com.communicators.welltalk.Repository.UserRepository;
 
 @Service
@@ -16,6 +22,15 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    TeacherRepository teacherRepository;
+
+    @Autowired
+    StudentRepository studentRepository;
+
+    @Autowired
+    CounselorRepository counselorRepository;
 
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
@@ -58,6 +73,8 @@ public class UserService implements UserDetailsService {
             userToUpdate.setPassword(user.getPassword());
             userToUpdate.setImage(user.getImage());
             userToUpdate.setVerified(user.isVerified());
+            userToUpdate.setCollege(user.getCollege());
+            userToUpdate.setProgram(user.getProgram());
         } catch (Exception e) {
             throw new IllegalArgumentException("User " + user.getId() + " does not exist.");
         } finally {
@@ -81,5 +98,34 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByInstitutionalEmailAndIsDeletedFalse(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+       public void mapFieldsToCounselor(int userId) {
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (user.isVerified()) {
+            CounselorEntity counselor = new CounselorEntity();
+            counselor.setInstitutionalEmail(user.getInstitutionalEmail());
+            counselor.setIdNumber(user.getIdNumber());
+            counselor.setFirstName(user.getFirstName());
+            counselor.setLastName(user.getLastName());
+            counselor.setGender(user.getGender());
+            counselor.setPassword(user.getPassword());
+            counselor.setImage(user.getImage());
+            counselor.setRole(user.getRole());
+
+            if (user instanceof TeacherEntity) {
+                TeacherEntity teacher = (TeacherEntity) user;
+                counselor.setCollege(teacher.getCollege());
+                counselor.setProgram(teacher.getProgram());
+            } else if (user instanceof StudentEntity) {
+                StudentEntity student = (StudentEntity) user;
+                counselor.setCollege(student.getCollege());
+                counselor.setProgram(student.getProgram());
+                counselor.setAssignedYear(String.valueOf(student.getYear()));
+            }
+
+            counselorRepository.save(counselor);
+        }
     }
 }

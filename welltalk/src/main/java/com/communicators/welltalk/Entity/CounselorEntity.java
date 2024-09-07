@@ -19,14 +19,14 @@ public class CounselorEntity extends UserEntity {
     }
 
     public CounselorEntity(String institutionalEmail, String idNumber, String firstName, String lastName, String gender,
-            String password, String image, String role, String assignedYear) {
-        super(institutionalEmail, idNumber, firstName, lastName, gender, password, image, role, false);
+            String password, String image, String role, String assignedYear, String college, String program) {
+        super(institutionalEmail, idNumber, firstName, lastName, gender, password, image, role, college, program);
         this.assignedYear = assignedYear;
     }
 
     public CounselorEntity(int teacherId, String institutionalEmail, String idNumber, String firstName, String lastName,
-            String gender, String password, String role, String assignedYear) {
-        super(institutionalEmail, idNumber, firstName, lastName, gender, password, role, false);
+            String gender, String password, String role, String assignedYear, String college, String program) {
+        super(institutionalEmail, idNumber, firstName, lastName, gender, password, role, college, program);
         this.assignedYear = assignedYear;
     }
 

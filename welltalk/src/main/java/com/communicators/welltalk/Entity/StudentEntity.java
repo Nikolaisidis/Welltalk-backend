@@ -11,11 +11,11 @@ import java.time.LocalDate;
 // @PrimaryKeyJoinColumn(name = "id")
 public class StudentEntity extends UserEntity {
 
-    @Column(name = "college")
-    private String college;
+    // @Column(name = "college")
+    // private String college;
 
-    @Column(name = "program")
-    private String program;
+    // @Column(name = "program")
+    // private String program;
 
     @Column(name = "year")
     private int year;
@@ -40,12 +40,10 @@ public class StudentEntity extends UserEntity {
     }
 
     public StudentEntity(String institutionalEmail, String idNumber, String firstName, String lastName, String gender,
-            String password, String image, String role, String college, String program, int year, LocalDate birthDate,
+            String password, String image, String role,String college, String program, int year, LocalDate birthDate,
             String contactNumber, String specificAddress, /* String barangay, String city, String province,
             String zipCode,*/ String parentGuardianName, String parentGuardianContactNumber) {
-        super(institutionalEmail, idNumber, firstName, lastName, gender, password, image, role, false);
-        this.college = college;
-        this.program = program;
+        super(institutionalEmail, idNumber, firstName, lastName, gender, password, image, role, college, program);
         this.year = year;
         this.birthDate = birthDate;
         this.contactNumber = contactNumber;
@@ -62,9 +60,9 @@ public class StudentEntity extends UserEntity {
             String gender, String password, String role, String college, String program, int year, LocalDate birthDate,
             String contactNumber, String specificAddress, /*String barangay, String city, String province,
             String zipCode, */String parentGuardianName, String parentGuardianContactNumber) {
-        super(institutionalEmail, idNumber, firstName, lastName, gender, password, role, false);
-        this.college = college;
-        this.program = program;
+        super(institutionalEmail, idNumber, firstName, lastName, gender, password, role, college, program);
+        // this.college = college;
+        // this.program = program;
         this.year = year;
         this.birthDate = birthDate;
         this.contactNumber = contactNumber;
@@ -77,21 +75,21 @@ public class StudentEntity extends UserEntity {
         this.parentGuardianName = parentGuardianName;
     }
 
-    public String getCollege() {
-        return college;
-    }
+    // public String getCollege() {
+    //     return college;
+    // }
 
-    public void setCollege(String college) {
-        this.college = college;
-    }
+    // public void setCollege(String college) {
+    //     this.college = college;
+    // }
 
-    public String getProgram() {
-        return program;
-    }
+    // public String getProgram() {
+    //     return program;
+    // }
 
-    public void setProgram(String program) {
-        this.program = program;
-    }
+    // public void setProgram(String program) {
+    //     this.program = program;
+    // }
 
     public int getYear() {
         return year;

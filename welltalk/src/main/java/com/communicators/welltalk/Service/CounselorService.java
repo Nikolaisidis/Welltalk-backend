@@ -63,4 +63,10 @@ public class CounselorService {
         }
     }
 
+    
+    public CounselorEntity findCounselorByCriteria(String program, String college, String assignedYear) {
+        return counselorRepository.findByProgramAndCollegeAndAssignedYearAndIsDeletedFalse(program, college, assignedYear)
+                .orElseThrow(() -> new IllegalArgumentException("No counselor found matching the criteria."));
+    }
+
 }

@@ -35,7 +35,7 @@ public class TeacherService {
             teacherToUpdate.setGender(teacher.getGender());
             // teacherToUpdate.setPassword(teacher.getPassword());
             teacherToUpdate.setImage(teacher.getImage());
-            teacherToUpdate.setCollege(teacher.getCollege());
+            // teacherToUpdate.setCollege(teacher.getCollege());
         } catch (NoSuchElementException e) {
             throw new NoSuchElementException("Teacher " + id + " does not exist.");
         } finally {

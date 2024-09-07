@@ -17,4 +17,7 @@ public interface CounselorRepository extends JpaRepository<CounselorEntity, Inte
     Optional<CounselorEntity> findByInstitutionalEmailAndIsDeletedFalse(String institutionalEmail);
 
     Optional<CounselorEntity> findCounselorByInstitutionalEmailAndIsDeletedFalse(String institutionalEmail);
+
+    Optional<CounselorEntity> findByProgramAndCollegeAndAssignedYearAndIsDeletedFalse(String program, String college, String assignedYear);
 }
+

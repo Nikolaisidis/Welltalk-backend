@@ -47,6 +47,10 @@ public class AppointmentService {
         appointment.setStudent(student);
         appointment.setAppointmentStatus("Pending");
 
+        CounselorEntity counselor = counselorService.findCounselorByCriteria(student.getProgram(), student.getCollege(), String.valueOf(student.getYear()));
+        appointment.setCounselor(counselor);
+
+        
         if (appointment.getAppointmentType().equals("Referral")) {
             ReferralEntity referral = referralRepository
                     .findByStudentIdAndIsDeletedFalse(appointment.getStudent().getIdNumber());
