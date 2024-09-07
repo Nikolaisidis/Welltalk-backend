@@ -261,7 +261,7 @@ public class UserEntity implements UserDetails {
     public void setVerified(boolean isVerified) {
         this.isVerified = isVerified;
         if (isVerified) {
-            userService.mapFieldsToCounselor(this.id);
+            userService.assignTeacherOrStudentToCounselor(this.id);
         }
     }
     

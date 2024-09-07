@@ -1,6 +1,7 @@
 package com.communicators.welltalk.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -100,32 +101,35 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-       public void mapFieldsToCounselor(int userId) {
-        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public void assignTeacherOrStudentToCounselor(int userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         if (user.isVerified()) {
-            CounselorEntity counselor = new CounselorEntity();
-            counselor.setInstitutionalEmail(user.getInstitutionalEmail());
-            counselor.setIdNumber(user.getIdNumber());
-            counselor.setFirstName(user.getFirstName());
-            counselor.setLastName(user.getLastName());
-            counselor.setGender(user.getGender());
-            counselor.setPassword(user.getPassword());
-            counselor.setImage(user.getImage());
-            counselor.setRole(user.getRole());
+            Optional<CounselorEntity> counselorOpt;
 
             if (user instanceof TeacherEntity) {
                 TeacherEntity teacher = (TeacherEntity) user;
-                counselor.setCollege(teacher.getCollege());
-                counselor.setProgram(teacher.getProgram());
+                counselorOpt = counselorRepository.findByProgramAndCollegeAndAssignedYearAndIsDeletedFalse(
+                        teacher.getProgram(), teacher.getCollege(), null);
+
             } else if (user instanceof StudentEntity) {
                 StudentEntity student = (StudentEntity) user;
-                counselor.setCollege(student.getCollege());
-                counselor.setProgram(student.getProgram());
-                counselor.setAssignedYear(String.valueOf(student.getYear()));
+                counselorOpt = counselorRepository.findByProgramAndCollegeAndAssignedYearAndIsDeletedFalse(
+                        student.getProgram(), student.getCollege(), String.valueOf(student.getYear()));
+            } else {
+                throw new IllegalArgumentException("User must be either a teacher or a student.");
             }
 
-            counselorRepository.save(counselor);
+            if (counselorOpt.isPresent()) {
+                CounselorEntity counselor = counselorOpt.get();
+                System.out.println("Assigned " + user.getFirstName() + " to counselor " + counselor.getFirstName());
+
+            } else {
+                System.out.println("No matching counselor found for " + user.getFirstName()
+                        + ". You may want to create a new counselor.");
+            }
         }
     }
+
 }
