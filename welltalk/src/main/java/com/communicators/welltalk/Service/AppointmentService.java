@@ -120,7 +120,16 @@ public class AppointmentService {
         appointment.setStudent(student);
         appointment.setAppointmentStatus("Pending");
 
-        return appointmentRepository.save(appointment);
+        AppointmentEntity appointmentCreated = appointmentRepository.save(appointment);
+
+        String message = "An appointment has been created for you. Date: " + appointment.getAppointmentDate()
+                + " Time: " + appointment.getAppointmentStartTime() + " Purpose: " + appointment.getAppointmentPurpose()
+                + " Type: " + appointment.getAppointmentType() + " Please wait for the counselor to assign you a time.";
+
+        emailService.sendSimpleMessage(appointmentCreated.getStudent().getInstitutionalEmail(), "Appointment Created",
+                message);
+
+        return appointmentCreated;
     }
 
     public AppointmentEntity saveAppointment(int id, AppointmentEntity appointment) {
