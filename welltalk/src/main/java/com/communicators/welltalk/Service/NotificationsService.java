@@ -40,7 +40,7 @@ public class NotificationsService {
         return notificationsRepository.findByReceiver(receiver);
     }
 
-    public List<NotificationsEntity> getNotificationsForCounselors(int receiverId) {
+    public List<NotificationsEntity> getNotifications(int receiverId) {
         UserEntity sender = userService.getUserById(receiverId);
         UserEntity receiver = userService.getUserById(receiverId);
        
