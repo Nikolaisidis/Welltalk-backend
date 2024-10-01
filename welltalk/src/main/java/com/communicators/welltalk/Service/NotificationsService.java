@@ -29,7 +29,7 @@ public class NotificationsService {
         String type = "appointment";
         UserEntity sender = userService.getUserById(senderId);
         UserEntity receiver = userService.getUserById(notificationDetails.getReceiverId());
-        AppointmentEntity appointment = appointmentService.getAppointmentByAppointmentId(notificationDetails.getAppointmentId());
+        AppointmentEntity appointment = appointmentService.getAppointmentByAppointmentId(notificationDetails.getServiceId());
 
         NotificationsEntity notification = new NotificationsEntity(type, sender, receiver, appointment);
         return notificationsRepository.save(notification);

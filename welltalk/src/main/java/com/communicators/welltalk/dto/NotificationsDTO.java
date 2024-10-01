@@ -2,15 +2,15 @@ package com.communicators.welltalk.dto;
 
 public class NotificationsDTO {
     private int receiverId;
-    private int appointmentId;
+    private int serviceId;
 
     public NotificationsDTO() {
     }
     
     // appointment
-    public NotificationsDTO(int receiverId, int appointmentId) {
+    public NotificationsDTO(int receiverId, int serviceId) {
         this.receiverId = receiverId;
-        this.appointmentId = appointmentId;
+        this.serviceId = serviceId;
     }
 
     public int getReceiverId() {
@@ -19,11 +19,11 @@ public class NotificationsDTO {
     public void setReceiverId(int receiverId) {
         this.receiverId = receiverId;
     }
-    public int getAppointmentId() {
-        return appointmentId;
+    public int getServiceId() {
+        return serviceId;
     }
-    public void setAppointmentId(int appointmentId) {
-        this.appointmentId = appointmentId;
+    public void setServiceId(int serviceId) {
+        this.serviceId = serviceId;
     }
 
 
