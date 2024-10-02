@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -14,7 +15,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import javax.persistence.GenerationType;
 
 @Entity
 @Table(name = "tblreferral")
@@ -26,6 +26,10 @@ public class ReferralEntity {
     @ManyToOne
     @JoinColumn(name = "teacherId", referencedColumnName = "id")
     private TeacherEntity teacher;
+
+    @ManyToOne
+    @JoinColumn(name = "studentAccountId", referencedColumnName = "id")
+    private StudentEntity student;
 
     @OneToMany(mappedBy = "referral", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<AppointmentEntity> appointments;
@@ -42,6 +46,8 @@ public class ReferralEntity {
 
     private String studentProgram;
 
+    private String studentYear;
+
     private String reason;
 
     private String status;
@@ -56,20 +62,55 @@ public class ReferralEntity {
 
     private boolean isDeleted;
 
+    private boolean isAccepted;
+
+    @ManyToOne
+    @JoinColumn(name = "counselorId", referencedColumnName = "id")
+    private CounselorEntity counselor;
+
     public ReferralEntity() {
     }
 
     public ReferralEntity(TeacherEntity teacher, String studentId, String studentEmail, String studentFirstName,
-            String studentLastName, String reason, String status, String studentCollege, String studentProgram) {
+            String studentLastName, String reason, String studentYear, String studentCollege, String studentProgram) {
         this.teacher = teacher;
         this.studentId = studentId;
         this.studentEmail = studentEmail;
         this.studentFirstName = studentFirstName;
         this.studentLastName = studentLastName;
         this.reason = reason;
-        this.status = status;
         this.studentCollege = studentCollege;
         this.studentProgram = studentProgram;
+        this.status = "Pending";
+        this.studentYear = studentYear;
+    }
+
+    public List<AppointmentEntity> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<AppointmentEntity> appointments) {
+        this.appointments = appointments;
+    }
+
+    public void setDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    public boolean isAccepted() {
+        return isAccepted;
+    }
+
+    public void setAccepted(boolean isAccepted) {
+        this.isAccepted = isAccepted;
+    }
+
+    public CounselorEntity getCounselor() {
+        return counselor;
+    }
+
+    public void setCounselor(CounselorEntity counselor) {
+        this.counselor = counselor;
     }
 
     public int getReferralId() {
@@ -200,6 +241,22 @@ public class ReferralEntity {
     @PreUpdate
     protected void onUpdate() {
         dateOfModification = LocalDateTime.now();
+    }
+
+    public StudentEntity getStudent() {
+        return student;
+    }
+
+    public void setStudent(StudentEntity student) {
+        this.student = student;
+    }
+
+    public String getStudentYear() {
+        return studentYear;
+    }
+
+    public void setStudentYear(String studentYear) {
+        this.studentYear = studentYear;
     }
 
 }

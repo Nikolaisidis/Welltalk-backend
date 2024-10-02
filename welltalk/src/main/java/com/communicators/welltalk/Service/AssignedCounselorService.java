@@ -43,7 +43,7 @@ public class AssignedCounselorService {
         }
     }
 
-    private void assignCounselorToStudent(StudentEntity student) {
+    public void assignCounselorToStudent(StudentEntity student) {
         // Remove existing assignments for the student
         List<AssignedCounselorEntity> existingAssignments = assignedCounselorRepository
                 .findByStudentId(student.getId());
@@ -92,7 +92,7 @@ public class AssignedCounselorService {
         List<AssignedCounselorEntity> existingAssignments = assignedCounselorRepository
                 .findByCounselorId(counselor.getId());
         assignedCounselorRepository.deleteAll(existingAssignments);
-        
+
         // Assign to existing verified students
         List<StudentEntity> students = studentRepository.findByIsDeletedFalseAndIsVerifiedTrue();
         for (StudentEntity student : students) {

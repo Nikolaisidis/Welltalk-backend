@@ -1,7 +1,6 @@
 package com.communicators.welltalk.Controller;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -68,16 +67,6 @@ public class ReferralController {
     public ResponseEntity<ReferralEntity> insertReferral(@RequestParam int teacherId,
             @RequestBody ReferralEntity referral) {
         ReferralEntity newReferral = referralService.saveReferral(teacherId, referral);
-
-        String token = UUID.randomUUID().toString();
-        referralTokenService.createReferralTokenForUser(newReferral, token);
-
-        String message = "You have been referred by " + newReferral.getTeacher().getFirstName() + " "
-                + newReferral.getTeacher().getLastName()
-                + " for a counselling session. To accept referral, please click on the link below: http://localhost:3000/referral/"
-                + token + "/pendingreferral";
-
-        emailService.sendSimpleMessage(newReferral.getStudentEmail(), "Referral Notification", message);
         return new ResponseEntity<>(newReferral, HttpStatus.CREATED);
     }
 

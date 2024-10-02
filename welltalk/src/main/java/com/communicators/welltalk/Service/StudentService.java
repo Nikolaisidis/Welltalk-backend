@@ -87,6 +87,10 @@ public class StudentService {
         return studentRepository.findByIdNumberAndIsDeletedFalse(studentId);
     }
 
+    public StudentEntity getStudentByInstitutionalEmail(String institutionalEmail) {
+        return studentRepository.findByInstitutionalEmailAndIsDeletedFalse(institutionalEmail);
+    }
+
     // public void assignCounselorToStudent(StudentEntity student, TeacherEntity
     // teacher) {
     // if (student.getIsVerified()) {

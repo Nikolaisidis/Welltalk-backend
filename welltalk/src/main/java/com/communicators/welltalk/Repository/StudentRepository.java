@@ -16,7 +16,7 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
 
     List<StudentEntity> findByIsDeletedFalseAndIsVerifiedTrue();
 
-    Optional<StudentEntity> findByInstitutionalEmailAndIsDeletedFalse(String institutionalEmail);
+    StudentEntity findByInstitutionalEmailAndIsDeletedFalse(String institutionalEmail);
 
     boolean existsByIdNumberAndIsDeletedFalse(String idNumber);
 
