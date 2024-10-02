@@ -100,4 +100,9 @@ public class CounselorService {
         }
     }
 
+    public CounselorEntity getCounselorAssigned(String program, String assignedYear, String college) {
+        return counselorRepository.findByProgramAndAssignedYearContainingAndCollegeAndIsDeletedFalse(program,
+                assignedYear, college);
+    }
+
 }
