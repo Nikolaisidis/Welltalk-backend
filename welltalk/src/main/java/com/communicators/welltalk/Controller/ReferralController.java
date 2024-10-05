@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.communicators.welltalk.Entity.ReferralEntity;
+import com.communicators.welltalk.Service.NotificationsService;
 import com.communicators.welltalk.Service.ReferralService;
 import com.communicators.welltalk.Service.ReferralTokenService;
 
@@ -30,6 +31,9 @@ public class ReferralController {
 
     @Autowired
     private ReferralTokenService referralTokenService;
+
+    @Autowired
+    private NotificationsService notificationService;
 
     @GetMapping("/getAllReferrals")
     public ResponseEntity<List<ReferralEntity>> getAllReferrals() {
@@ -53,12 +57,6 @@ public class ReferralController {
         return new ResponseEntity<>(referrals, HttpStatus.OK);
     }
 
-    @GetMapping("/getReferralsByCounselorId")
-    public ResponseEntity<List<ReferralEntity>> getReferralByCounselorId(@RequestParam int id) {
-        List<ReferralEntity> referrals = referralService.getReferralsByCounselorId(id);
-        return new ResponseEntity<>(referrals, HttpStatus.OK);
-    }
-
     // @PutMapping("/markReferralAsAccepted")
     // public ResponseEntity<ReferralEntity> markReferralAsAccepted(@RequestParam
     // int id) {
@@ -66,10 +64,17 @@ public class ReferralController {
     // return new ResponseEntity<>(updatedReferral, HttpStatus.OK);
     // }
 
+    @GetMapping("/getReferralsByCounselorId")
+    public ResponseEntity<List<ReferralEntity>> getReferralByCounselorId(@RequestParam int id) {
+        List<ReferralEntity> referrals = referralService.getReferralsByCounselorId(id);
+        return new ResponseEntity<>(referrals, HttpStatus.OK);
+    }
+
     @PostMapping("/createReferral")
     public ResponseEntity<ReferralEntity> insertReferral(@RequestParam int teacherId,
             @RequestBody ReferralEntity referral) {
         ReferralEntity newReferral = referralService.saveReferral(teacherId, referral);
+
         return new ResponseEntity<>(newReferral, HttpStatus.CREATED);
     }
 
@@ -119,4 +124,5 @@ public class ReferralController {
         String token = referralTokenService.getReferralTokenByReferralId(referralId);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
+
 }

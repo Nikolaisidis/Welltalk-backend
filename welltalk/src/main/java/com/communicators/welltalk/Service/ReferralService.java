@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import com.communicators.welltalk.Entity.CounselorEntity;
 import com.communicators.welltalk.Entity.ReferralEntity;
 import com.communicators.welltalk.Entity.ReferralTokenEntity;
-import com.communicators.welltalk.Entity.Role;
-import com.communicators.welltalk.Entity.StudentEntity;
 import com.communicators.welltalk.Entity.TeacherEntity;
 import com.communicators.welltalk.Repository.ReferralRepository;
 

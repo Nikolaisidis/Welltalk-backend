@@ -33,6 +33,10 @@ public class NotificationsEntity {
     @JoinColumn(name = "app_id", referencedColumnName = "appointmentId")
     private AppointmentEntity appointment; 
 
+    @ManyToOne
+    @JoinColumn(name = "ref", referencedColumnName = "referralId")
+    private ReferralEntity referral; 
+
     public NotificationsEntity() {
     }
 
@@ -45,6 +49,7 @@ public class NotificationsEntity {
         this.sender = sender;
         this.receiver = receiver;
         this.appointment = appointment;
+
     }
 
     // appointment
@@ -53,6 +58,17 @@ public class NotificationsEntity {
         this.sender = sender;
         this.receiver = receiver;
         this.appointment = appointment;
+        isRead = false;
+
+    }
+
+    // referral
+    public NotificationsEntity(String type, UserEntity sender, UserEntity receiver, ReferralEntity referral) {
+        this.type = type;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.referral = referral;
+        isRead = false;
     }
    
     public int getNotificationId() {
@@ -114,6 +130,14 @@ public class NotificationsEntity {
     @PrePersist
     protected void onCreate() {
         date = LocalDateTime.now();
+    }
+
+    public ReferralEntity getReferral() {
+        return referral;
+    }
+
+    public void setReferral(ReferralEntity referral) {
+        this.referral = referral;
     }
 
     // @PreUpdate

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.communicators.welltalk.Entity.AppointmentEntity;
 import com.communicators.welltalk.Entity.NotificationsEntity;
+import com.communicators.welltalk.Entity.ReferralEntity;
 import com.communicators.welltalk.Entity.UserEntity;
 import com.communicators.welltalk.Repository.NotificationsRepository;
 import com.communicators.welltalk.dto.NotificationsDTO;
@@ -24,14 +25,28 @@ public class NotificationsService {
     @Autowired
     private AppointmentService appointmentService;
 
+    @Autowired
+    private ReferralService referralService;
+
     // Appointment
-    public NotificationsEntity createAppointmentNotification(int senderId, NotificationsDTO notificationDetails) {
+    public NotificationsEntity createAppointmentNotification(int senderId, NotificationsDTO details) {
         String type = "appointment";
         UserEntity sender = userService.getUserById(senderId);
-        UserEntity receiver = userService.getUserById(notificationDetails.getReceiverId());
-        AppointmentEntity appointment = appointmentService.getAppointmentByAppointmentId(notificationDetails.getServiceId());
+        UserEntity receiver = userService.getUserById(details.getReceiverId());
+        AppointmentEntity appointment = appointmentService.getAppointmentByAppointmentId(details.getServiceId());
 
         NotificationsEntity notification = new NotificationsEntity(type, sender, receiver, appointment);
+        return notificationsRepository.save(notification);
+    }
+
+    // Referral
+    public NotificationsEntity createReferralTeacherStudentNotification(int teacherId, NotificationsDTO details) {
+        String type = "referral";
+        UserEntity teacher = userService.getUserById(teacherId);
+        UserEntity student = userService.getUserById(details.getReceiverId());
+        ReferralEntity referral = referralService.getReferralById(details.getServiceId());
+
+        NotificationsEntity notification = new NotificationsEntity(type, teacher, student, referral);
         return notificationsRepository.save(notification);
     }
 

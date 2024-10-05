@@ -27,9 +27,18 @@ public class NotificationsController {
     // Appointment
     @PostMapping("/createAppointmentNotification")
     public ResponseEntity<NotificationsEntity> createAppointmentNotification(@RequestParam int senderId,
-            @RequestBody NotificationsDTO notificationDetails) {
+            @RequestBody NotificationsDTO details) {
         NotificationsEntity newNotification = notificationsService.createAppointmentNotification(senderId,
-                notificationDetails);
+                details);
+        return new ResponseEntity<>(newNotification, HttpStatus.CREATED);
+    }
+
+    // Referral
+    @PostMapping("/createReferralTSNotification")
+    public ResponseEntity<NotificationsEntity> createReferralTeacherStudentNotification(@RequestParam int teacherId,
+            @RequestBody NotificationsDTO details) {
+        NotificationsEntity newNotification = notificationsService.createReferralTeacherStudentNotification(teacherId,
+                details);
         return new ResponseEntity<>(newNotification, HttpStatus.CREATED);
     }
 
