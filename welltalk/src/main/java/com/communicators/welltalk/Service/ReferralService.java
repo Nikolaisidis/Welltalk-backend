@@ -6,11 +6,13 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.communicators.welltalk.Entity.AssignedCounselorEntity;
 import com.communicators.welltalk.Entity.CounselorEntity;
 import com.communicators.welltalk.Entity.ReferralEntity;
 import com.communicators.welltalk.Entity.ReferralTokenEntity;
 import com.communicators.welltalk.Entity.TeacherEntity;
 import com.communicators.welltalk.Repository.ReferralRepository;
+import com.communicators.welltalk.Repository.CounselorRepository;
 
 @Service
 public class ReferralService {
@@ -45,6 +47,9 @@ public class ReferralService {
     @Autowired
     EmailTemplates emailTemplates;
 
+    @Autowired
+    CounselorRepository counselorRepository;
+
     public List<ReferralEntity> getAllReferrals() {
         return referralRepository.findByIsDeletedFalse();
     }
@@ -65,21 +70,19 @@ public class ReferralService {
         TeacherEntity teacher = teacherService.getTeacherById(teacherId);
         referral.setTeacher(teacher);
 
-        // if (userService.existsByIdNumber(referral.getStudentId())) {
-        // StudentEntity student =
-        // studentService.getStudentByStudentId(referral.getStudentId());
-        // referral.setStudent(student);
-        // assignedCounselorService.assignCounselorToStudent(student);
-        // } else if (userService.existsByEmail(referral.getStudentEmail())) {
-        // StudentEntity student =
-        // studentService.getStudentByInstitutionalEmail(referral.getStudentEmail());
-        // referral.setStudent(student);
-        // assignedCounselorService.assignCounselorToStudent(student);
+        // List<CounselorEntity> counselors =
+        // counselorRepository.findByIsDeletedFalseAndIsVerifiedTrue();
+        // for (CounselorEntity counselor : counselors) {
+        // if (counselor.getProgram().contains(referral.getStudentProgram()) &&
+        // counselor.getCollege().equals(referral.getStudentCollege()) &&
+        // counselor.getAssignedYear().contains(String.valueOf(referral.getStudentYear())))
+        // {
+        // referral.setCounselor(counselor);
         // }
 
+        // }
         CounselorEntity counselor = counselorService.getCounselorAssigned(referral.getStudentProgram(),
                 referral.getStudentYear(), referral.getStudentCollege());
-
         referral.setCounselor(counselor);
 
         ReferralEntity newReferral = referralRepository.save(referral);

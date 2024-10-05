@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.communicators.welltalk.Entity.CounselorEntity;
@@ -20,8 +22,9 @@ public interface CounselorRepository extends JpaRepository<CounselorEntity, Inte
 
     Optional<CounselorEntity> findCounselorByInstitutionalEmailAndIsDeletedFalse(String institutionalEmail);
 
-    CounselorEntity findByProgramAndAssignedYearContainingAndCollegeAndIsDeletedFalse(
-            String program,
-            String assignedYear,
-            String college);
+    CounselorEntity findByProgramContainingAndCollegeAndAssignedYearContainingAndIsDeletedFalse(
+            @Param("program") String program,
+            @Param("college") String college,
+            @Param("assignedYear") String assignedYear);
+
 }
