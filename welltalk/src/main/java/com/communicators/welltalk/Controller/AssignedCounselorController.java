@@ -77,4 +77,14 @@ public class AssignedCounselorController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/getCounselorByReceiverId/{receiverId}")
+    public ResponseEntity<List<CounselorEntity>> getCounselorByReceiverId(@PathVariable int receiverId) {
+        List<CounselorEntity> counselors = assignedCounselorService.getCounselorsByReceiverId(receiverId);
+        if (counselors != null && !counselors.isEmpty()) {
+            return new ResponseEntity<>(counselors, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

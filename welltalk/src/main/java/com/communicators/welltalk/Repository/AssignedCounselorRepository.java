@@ -14,4 +14,5 @@ public interface AssignedCounselorRepository extends JpaRepository<AssignedCouns
     List<AssignedCounselorEntity> findByStudentId(int studentId);
 
     List<AssignedCounselorEntity> findByTeacherId(int teacherId);
+
 }
