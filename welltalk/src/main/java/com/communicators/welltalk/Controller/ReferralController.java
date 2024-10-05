@@ -53,6 +53,12 @@ public class ReferralController {
         return new ResponseEntity<>(referrals, HttpStatus.OK);
     }
 
+    @GetMapping("/getReferralsByCounselorId")
+    public ResponseEntity<List<ReferralEntity>> getReferralByCounselorId(@RequestParam int id) {
+        List<ReferralEntity> referrals = referralService.getReferralsByCounselorId(id);
+        return new ResponseEntity<>(referrals, HttpStatus.OK);
+    }
+
     // @PutMapping("/markReferralAsAccepted")
     // public ResponseEntity<ReferralEntity> markReferralAsAccepted(@RequestParam
     // int id) {

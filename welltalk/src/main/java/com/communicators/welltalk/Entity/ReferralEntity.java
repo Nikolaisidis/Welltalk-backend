@@ -72,7 +72,8 @@ public class ReferralEntity {
     }
 
     public ReferralEntity(TeacherEntity teacher, String studentId, String studentEmail, String studentFirstName,
-            String studentLastName, String reason, String studentYear, String studentCollege, String studentProgram) {
+            String studentLastName, String reason, String studentYear, String studentCollege, String studentProgram,
+            CounselorEntity counselor) {
         this.teacher = teacher;
         this.studentId = studentId;
         this.studentEmail = studentEmail;
@@ -81,8 +82,8 @@ public class ReferralEntity {
         this.reason = reason;
         this.studentCollege = studentCollege;
         this.studentProgram = studentProgram;
-        this.status = "Pending";
         this.studentYear = studentYear;
+        this.counselor = counselor;
     }
 
     public List<AppointmentEntity> getAppointments() {
@@ -236,6 +237,7 @@ public class ReferralEntity {
     @PrePersist
     protected void onCreate() {
         dateOfRefferal = LocalDateTime.now();
+        status = "Pending";
     }
 
     @PreUpdate

@@ -56,7 +56,11 @@ public class ReferralService {
     }
 
     public List<ReferralEntity> getReferralsByReferredById(int id) {
-        return referralRepository.findByTeacher_IdAndIsDeletedFalse(id);
+        return referralRepository.findByTeacher_IdAndIsDeletedFalseOrderByReferralIdDesc(id);
+    }
+
+    public List<ReferralEntity> getReferralsByCounselorId(int id) {
+        return referralRepository.findByCounselor_IdAndIsDeletedFalseOrderByReferralIdDesc(id);
     }
 
     public ReferralEntity saveReferral(int teacherId, ReferralEntity referral) {
@@ -139,7 +143,7 @@ public class ReferralService {
         ReferralEntity referral = referralRepository
                 .findByReferralIdAndIsDeletedFalse(referralTokenEntity.getReferral().getReferralId());
         referral.setAccepted(true);
-        referral.setStatus("Replied");
+        referral.setStatus("Responded");
         referralRepository.save(referral);
         referralTokenService.deleteReferralToken(referralTokenEntity);
         return referral;
@@ -150,8 +154,7 @@ public class ReferralService {
         ReferralEntity referral = referralRepository
                 .findByReferralIdAndIsDeletedFalse(referralTokenEntity.getReferral().getReferralId());
         referral.setAccepted(false);
-        referral.setStatus("Replied");
-        System.out.println("Decline!");
+        referral.setStatus("Responded");
         referralRepository.save(referral);
         referralTokenService.deleteReferralToken(referralTokenEntity);
         return referral;
