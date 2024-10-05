@@ -2,16 +2,19 @@ package com.communicators.welltalk.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.communicators.welltalk.Entity.AssignedCounselorEntity;
+import com.communicators.welltalk.Entity.ChatEntity;
 import com.communicators.welltalk.Entity.CounselorEntity;
 import com.communicators.welltalk.Entity.StudentEntity;
 import com.communicators.welltalk.Entity.TeacherEntity;
 import com.communicators.welltalk.Entity.UserEntity;
 import com.communicators.welltalk.Repository.AssignedCounselorRepository;
+import com.communicators.welltalk.Repository.ChatRepository;
 import com.communicators.welltalk.Repository.CounselorRepository;
 import com.communicators.welltalk.Repository.StudentRepository;
 import com.communicators.welltalk.Repository.TeacherRepository;
@@ -30,6 +33,23 @@ public class AssignedCounselorService {
 
     @Autowired
     AssignedCounselorRepository assignedCounselorRepository;
+
+    @Autowired
+    ChatRepository chatRepository;
+
+    public List<CounselorEntity> getCounselorsByReceiverId(int receiverId) {
+        List<ChatEntity> chats = chatRepository.findByReceiverId(receiverId);
+        List<Integer> counselorIds = chats.stream()
+                .map(ChatEntity::getSenderId)
+                .distinct()
+                .collect(Collectors.toList());
+
+        return counselorIds.stream()
+                .map(counselorRepository::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
 
     public void assignCounselorIfVerified(UserEntity user) {
         if (user.getIsVerified()) {
