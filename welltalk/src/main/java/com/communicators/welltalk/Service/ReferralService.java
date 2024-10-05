@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.communicators.welltalk.Entity.CounselorEntity;
 import com.communicators.welltalk.Entity.ReferralEntity;
+import com.communicators.welltalk.Entity.ReferralTokenEntity;
 import com.communicators.welltalk.Entity.Role;
 import com.communicators.welltalk.Entity.StudentEntity;
 import com.communicators.welltalk.Entity.TeacherEntity;
@@ -92,23 +93,24 @@ public class ReferralService {
 
     }
 
-    public ReferralEntity markReferralAsAccepted(int id) {
-        ReferralEntity referral = referralRepository.findByReferralIdAndIsDeletedFalse(id);
-        referral.setStatus("Replied");
-        if (!userService.existsByIdNumber(referral.getStudentId())) {
-            StudentEntity studentToCreate = new StudentEntity();
-            studentToCreate.setIdNumber(referral.getStudentId());
-            studentToCreate.setInstitutionalEmail(referral.getStudentEmail());
-            studentToCreate.setFirstName(referral.getStudentFirstName());
-            studentToCreate.setLastName(referral.getStudentLastName());
-            studentToCreate.setIsDeleted(false);
-            studentToCreate.setPassword("12345678");
-            studentToCreate.setRole(Role.student);
+    // public ReferralEntity markReferralAsAccepted(int id) {
+    // ReferralEntity referral =
+    // referralRepository.findByReferralIdAndIsDeletedFalse(id);
+    // referral.setStatus("Replied");
+    // if (!userService.existsByIdNumber(referral.getStudentId())) {
+    // StudentEntity studentToCreate = new StudentEntity();
+    // studentToCreate.setIdNumber(referral.getStudentId());
+    // studentToCreate.setInstitutionalEmail(referral.getStudentEmail());
+    // studentToCreate.setFirstName(referral.getStudentFirstName());
+    // studentToCreate.setLastName(referral.getStudentLastName());
+    // studentToCreate.setIsDeleted(false);
+    // studentToCreate.setPassword("12345678");
+    // studentToCreate.setRole(Role.student);
 
-            authenticationService.registerStudent(studentToCreate);
-        }
-        return referralRepository.save(referral);
-    }
+    // authenticationService.registerStudent(studentToCreate);
+    // }
+    // return referralRepository.save(referral);
+    // }
 
     @SuppressWarnings("finally")
     public ReferralEntity updateReferral(int id, ReferralEntity referral) {
@@ -130,6 +132,29 @@ public class ReferralService {
         } finally {
             return referralRepository.save(referralToUpdate);
         }
+    }
+
+    public ReferralEntity referralAcceptedByStudent(String token) {
+        ReferralTokenEntity referralTokenEntity = referralTokenService.getReferralToken(token);
+        ReferralEntity referral = referralRepository
+                .findByReferralIdAndIsDeletedFalse(referralTokenEntity.getReferral().getReferralId());
+        referral.setAccepted(true);
+        referral.setStatus("Replied");
+        referralRepository.save(referral);
+        referralTokenService.deleteReferralToken(referralTokenEntity);
+        return referral;
+    }
+
+    public ReferralEntity referralDeclinedByStudent(String token) {
+        ReferralTokenEntity referralTokenEntity = referralTokenService.getReferralToken(token);
+        ReferralEntity referral = referralRepository
+                .findByReferralIdAndIsDeletedFalse(referralTokenEntity.getReferral().getReferralId());
+        referral.setAccepted(false);
+        referral.setStatus("Replied");
+        System.out.println("Decline!");
+        referralRepository.save(referral);
+        referralTokenService.deleteReferralToken(referralTokenEntity);
+        return referral;
     }
 
     public boolean deleteReferral(int id) {
