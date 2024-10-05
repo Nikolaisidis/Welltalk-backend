@@ -114,4 +114,9 @@ public class ReferralController {
         return new ResponseEntity<>(updatedReferral, HttpStatus.OK);
     }
 
+    @GetMapping("/getReferralTokenByReferralId")
+    public ResponseEntity<String> getReferralTokenByReferralId(@RequestParam int referralId) {
+        String token = referralTokenService.getReferralTokenByReferralId(referralId);
+        return new ResponseEntity<>(token, HttpStatus.OK);
+    }
 }
