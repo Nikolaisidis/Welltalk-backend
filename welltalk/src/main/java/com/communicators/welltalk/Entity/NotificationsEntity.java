@@ -34,14 +34,14 @@ public class NotificationsEntity {
     private AppointmentEntity appointment; 
 
     @ManyToOne
-    @JoinColumn(name = "ref", referencedColumnName = "referralId")
+    @JoinColumn(name = "ref_id", referencedColumnName = "referralId")
     private ReferralEntity referral; 
 
     public NotificationsEntity() {
     }
 
     public NotificationsEntity(int notificationId, String type, boolean isRead, LocalDateTime date, UserEntity sender,
-            UserEntity receiver, AppointmentEntity appointment) {
+            UserEntity receiver, AppointmentEntity appointment, ReferralEntity referral) {
         this.notificationId = notificationId;
         this.type = type;
         this.isRead = isRead;
@@ -49,8 +49,9 @@ public class NotificationsEntity {
         this.sender = sender;
         this.receiver = receiver;
         this.appointment = appointment;
-
+        this.referral = referral;
     }
+
 
     // appointment
     public NotificationsEntity(String type, UserEntity sender, UserEntity receiver, AppointmentEntity appointment) {
@@ -58,8 +59,7 @@ public class NotificationsEntity {
         this.sender = sender;
         this.receiver = receiver;
         this.appointment = appointment;
-        isRead = false;
-
+        this.isRead = false;
     }
 
     // referral
@@ -68,7 +68,7 @@ public class NotificationsEntity {
         this.sender = sender;
         this.receiver = receiver;
         this.referral = referral;
-        isRead = false;
+        this.isRead = false;
     }
    
     public int getNotificationId() {
@@ -87,13 +87,7 @@ public class NotificationsEntity {
         this.type = type;
     }
 
-    public boolean isRead() {
-        return isRead;
-    }
-
-    public void setRead(boolean isRead) {
-        this.isRead = isRead;
-    }
+    
 
     public LocalDateTime getDate() {
         return date;
@@ -138,6 +132,18 @@ public class NotificationsEntity {
 
     public void setReferral(ReferralEntity referral) {
         this.referral = referral;
+    }
+
+
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+
+
+    public void setRead(boolean isRead) {
+        this.isRead = isRead;
     }
 
     // @PreUpdate

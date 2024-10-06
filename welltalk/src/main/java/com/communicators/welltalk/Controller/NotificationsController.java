@@ -42,21 +42,9 @@ public class NotificationsController {
         return new ResponseEntity<>(newNotification, HttpStatus.CREATED);
     }
 
-    @GetMapping("/getNotificationsForStudents")
+    @GetMapping("/getNotificationsByReceiver")
     public ResponseEntity<List<NotificationsEntity>> getNotificationsForStudents(@RequestParam int receiverId) {
-        List<NotificationsEntity> notifications = notificationsService.getNotificationsForStudents(receiverId);
-        return new ResponseEntity<>(notifications, HttpStatus.OK);
-    }
-
-    @GetMapping("/getNotificationsForCounselors")
-    public ResponseEntity<List<NotificationsEntity>> getNotificationsForCounselors(@RequestParam int receiverId) {
-        List<NotificationsEntity> notifications = notificationsService.getNotifications(receiverId);
-        return new ResponseEntity<>(notifications, HttpStatus.OK);
-    }
-
-    @GetMapping("/getNotificationsForTeachers")
-    public ResponseEntity<List<NotificationsEntity>> getNotificationsForTeachers(@RequestParam int receiverId){
-        List<NotificationsEntity> notifications = notificationsService.getNotifications(receiverId);
+        List<NotificationsEntity> notifications = notificationsService.getNotificationsByReceiver(receiverId);
         return new ResponseEntity<>(notifications, HttpStatus.OK);
     }
 
