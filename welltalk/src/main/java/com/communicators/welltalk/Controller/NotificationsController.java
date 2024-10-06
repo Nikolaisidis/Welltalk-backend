@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,6 +49,13 @@ public class NotificationsController {
         return new ResponseEntity<>(notifications, HttpStatus.OK);
     }
 
+    @PutMapping("/markAsRead")
+    public ResponseEntity<Void> markAsRead(@RequestParam int notificationId) {
+        notificationsService.markAsRead(notificationId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
     @DeleteMapping("/deleteNotification")
     public ResponseEntity<Void> deleteNotification(@RequestParam int notificationId) {
         notificationsService.deleteNotification(notificationId);

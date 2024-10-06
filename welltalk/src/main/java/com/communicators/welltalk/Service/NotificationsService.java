@@ -53,6 +53,16 @@ public class NotificationsService {
         UserEntity receiver = userService.getUserById(receiverId);
         return notificationsRepository.findByReceiver(receiver);
     }
+
+    public void markAsRead(int id){
+        NotificationsEntity notification = notificationsRepository.findByNotificationId(id);
+        if (notification != null) {
+            notification.setRead(true);
+            notificationsRepository.save(notification);
+        } else {
+            throw new RuntimeException("Notification not found with ID: " + id); 
+        }
+    }
     
     public void deleteNotification(int notificationId) {
         notificationsRepository.deleteById(notificationId);
