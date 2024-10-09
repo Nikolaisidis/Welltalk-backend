@@ -125,4 +125,10 @@ public class ReferralController {
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
+    @GetMapping("/getActiveAcceptedReferral")
+    public ResponseEntity<?> checkActiveAcceptedReferral(@RequestParam String studentEmail) {
+        boolean isActiveAcceptedReferral = referralService.checkActiveAcceptedReferral(studentEmail);
+        return new ResponseEntity<>(isActiveAcceptedReferral, HttpStatus.OK);
+    }
+
 }

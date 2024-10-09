@@ -169,4 +169,14 @@ public class ReferralService {
         }
     }
 
+    public boolean checkActiveAcceptedReferral(String studentEmail) {
+        List<ReferralEntity> referrals = referralRepository
+                .findByStudentEmailAndStatusAndIsAcceptedTrueAndIsDeletedFalse(studentEmail, "Responded");
+        if (referrals.size() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
