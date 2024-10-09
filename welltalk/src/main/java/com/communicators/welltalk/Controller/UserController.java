@@ -14,19 +14,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.communicators.welltalk.Entity.AuthenticationResponse;
 import com.communicators.welltalk.Entity.PasswordResetTokenEntity;
 import com.communicators.welltalk.Entity.UserEntity;
+import com.communicators.welltalk.Repository.PasswordResetTokenRepository;
+import com.communicators.welltalk.Repository.UserRepository;
 import com.communicators.welltalk.Service.AuthenticationService;
+import com.communicators.welltalk.Service.EmailService;
 import com.communicators.welltalk.Service.PasswordReset;
 import com.communicators.welltalk.Service.UserService;
 import com.communicators.welltalk.dto.PasswordChangeDTO;
-import com.communicators.welltalk.Repository.PasswordResetTokenRepository;
-import com.communicators.welltalk.Repository.UserRepository;
-import com.communicators.welltalk.Service.EmailService;
+import com.communicators.welltalk.dto.PasswordVerificationDTO;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
@@ -183,4 +184,15 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Token is invalid");
         }
     }
+
+    @PostMapping("/verifyPassword")
+    public ResponseEntity<?> verifyPassword(@RequestBody PasswordVerificationDTO request) {
+        try {
+            boolean isValid = authenticationService.verifyPassword(request);
+            return ResponseEntity.ok(isValid ? "Password is correct." : "Password is incorrect.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
