@@ -78,14 +78,4 @@ public class CounselorController {
         }
     }
 
-    @GetMapping("/getCounselorAssigned")
-    public ResponseEntity<CounselorEntity> getCounselorAssigned(@RequestBody String program, String assignedYear,
-            String college) {
-        CounselorEntity counselor = counselorService.getCounselorAssigned(program, assignedYear, college);
-        if (counselor != null) {
-            return new ResponseEntity<>(counselor, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
 }
