@@ -1,5 +1,6 @@
 package com.communicators.welltalk.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -98,12 +99,6 @@ public class CounselorService {
             System.out.println("Counselor " + id + " does not exist.");
             return false;
         }
-    }
-
-    public CounselorEntity getCounselorAssigned(String program, String assignedYear, String college) {
-        return counselorRepository
-                .findByProgramContainingAndCollegeAndAssignedYearContainingAndIsDeletedFalse(program, college,
-                        assignedYear);
     }
 
 }

@@ -70,20 +70,16 @@ public class ReferralService {
         TeacherEntity teacher = teacherService.getTeacherById(teacherId);
         referral.setTeacher(teacher);
 
-        // List<CounselorEntity> counselors =
-        // counselorRepository.findByIsDeletedFalseAndIsVerifiedTrue();
-        // for (CounselorEntity counselor : counselors) {
-        // if (counselor.getProgram().contains(referral.getStudentProgram()) &&
-        // counselor.getCollege().equals(referral.getStudentCollege()) &&
-        // counselor.getAssignedYear().contains(String.valueOf(referral.getStudentYear())))
-        // {
-        // referral.setCounselor(counselor);
-        // }
+        List<CounselorEntity> counselors = counselorRepository.findByIsDeletedFalseAndIsVerifiedTrue();
+        for (CounselorEntity counselor : counselors) {
+            if (counselor.getProgram().contains(referral.getStudentProgram()) &&
+                    counselor.getCollege().equals(referral.getStudentCollege()) &&
+                    counselor.getAssignedYear().contains(String.valueOf(referral.getStudentYear()))) {
+                referral.setCounselor(counselor);
+                System.out.println("Counselor assigned to referral: " + counselor.getInstitutionalEmail());
+            }
 
-        // }
-        CounselorEntity counselor = counselorService.getCounselorAssigned(referral.getStudentProgram(),
-                referral.getStudentYear(), referral.getStudentCollege());
-        referral.setCounselor(counselor);
+        }
 
         ReferralEntity newReferral = referralRepository.save(referral);
 

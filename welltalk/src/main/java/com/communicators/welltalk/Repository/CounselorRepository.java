@@ -27,4 +27,10 @@ public interface CounselorRepository extends JpaRepository<CounselorEntity, Inte
             @Param("college") String college,
             @Param("assignedYear") String assignedYear);
 
+    List<CounselorEntity> findByCollegeAndIsDeletedFalse(String college);
+
+    List<CounselorEntity> findByProgramContainingAndIsDeletedFalse(String program);
+
+    List<CounselorEntity> findByAssignedYearContainingAndIsDeletedFalse(String assignedYear);
+
 }
