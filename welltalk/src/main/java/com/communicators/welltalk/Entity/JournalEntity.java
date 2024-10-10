@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Lob;
 
 @Entity
 @Table(name = "tbljournal")
@@ -29,6 +30,7 @@ public class JournalEntity {
     // edit
     private String title;
 
+    @Lob
     private String entry;
 
     private LocalDate dateOfEntry;
