@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Lob;
+
 
 @Entity
 @Table(name = "tblpost")
@@ -26,6 +28,7 @@ public class PostEntity {
     @JoinColumn(name = "authorId", referencedColumnName = "id")
     private CounselorEntity author;
 
+    @Lob
     private String postContent;
 
     private LocalDate postDate;
