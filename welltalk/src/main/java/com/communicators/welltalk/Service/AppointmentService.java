@@ -266,21 +266,7 @@ public class AppointmentService {
     }
 
     public List<AppointmentEntity> getAppointmentsByDate(LocalDate date) {
-        List<AppointmentEntity> appointments = appointmentRepository.findByAppointmentDateAndIsDeletedFalse(date);
-        LocalDateTime now = LocalDateTime.now();
-
-        for (AppointmentEntity appointment : appointments) {
-            LocalDateTime appointmentStart = LocalDateTime.of(appointment.getAppointmentDate(),
-                    LocalTime.parse(appointment.getAppointmentStartTime()));
-            LocalDateTime appointmentEnd = appointmentStart.plusHours(1);
-
-            if (now.isAfter(appointmentStart) && now.isBefore(appointmentEnd)) {
-                appointment.setAppointmentStatus("Ongoing");
-                appointmentRepository.save(appointment);
-            }
-        }
-
-        return appointments;
+        return appointmentRepository.findByAppointmentDateAndIsDeletedFalse(date);
     }
 
     public List<AppointmentEntity> getAppointmentsByDateAndCounselor(LocalDate date, int counselorId) {
@@ -290,18 +276,6 @@ public class AppointmentService {
 
         List<AppointmentEntity> appointments = appointmentRepository
                 .findByCounselorAndAppointmentDateAndIsDeletedFalse(counselor, date);
-        LocalDateTime now = LocalDateTime.now();
-
-        for (AppointmentEntity appointment : appointments) {
-            LocalDateTime appointmentStart = LocalDateTime.of(appointment.getAppointmentDate(),
-                    LocalTime.parse(appointment.getAppointmentStartTime()));
-            LocalDateTime appointmentEnd = appointmentStart.plusHours(1);
-
-            if (now.isAfter(appointmentStart) && now.isBefore(appointmentEnd)) {
-                appointment.setAppointmentStatus("Ongoing");
-                appointmentRepository.save(appointment);
-            }
-        }
 
         return appointments;
     }
