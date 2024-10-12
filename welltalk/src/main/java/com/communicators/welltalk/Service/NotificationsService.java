@@ -24,8 +24,8 @@ public class NotificationsService {
     @Autowired
     private AppointmentService appointmentService;
 
-    @Autowired
-    private ReferralService referralService;
+    // @Autowired
+    // private ReferralService referralService;
 
     // Appointment
     public NotificationsEntity createAppointmentNotification(int senderId, NotificationsDTO details) {
@@ -35,17 +35,6 @@ public class NotificationsService {
         AppointmentEntity appointment = appointmentService.getAppointmentByAppointmentId(details.getServiceId());
 
         NotificationsEntity notification = new NotificationsEntity(type, sender, receiver, appointment);
-        return notificationsRepository.save(notification);
-    }
-
-    // Referral
-    public NotificationsEntity createReferralTeacherStudentNotification(int teacherId, NotificationsDTO details) {
-        String type = "referral";
-        UserEntity teacher = userService.getUserById(teacherId);
-        UserEntity student = userService.getUserById(details.getReceiverId());
-        ReferralEntity referral = referralService.getReferralById(details.getServiceId());
-
-        NotificationsEntity notification = new NotificationsEntity(type, teacher, student, referral);
         return notificationsRepository.save(notification);
     }
 
@@ -68,7 +57,7 @@ public class NotificationsService {
 
     public List<NotificationsEntity> getNotificationsByReceiver(int receiverId) {
         UserEntity receiver = userService.getUserById(receiverId);
-        return notificationsRepository.findByReceiver(receiver);
+        return notificationsRepository.findByReceiverAndIsDeletedFalse(receiver);
     }
 
     public void markAsRead(int id){
@@ -81,8 +70,17 @@ public class NotificationsService {
         }
     }
     
-    public void deleteNotification(int notificationId) {
-        notificationsRepository.deleteById(notificationId);
+    public boolean deleteNotification(int notificationId) {
+        NotificationsEntity notification = notificationsRepository.findByNotificationId(notificationId);
+
+        if (notification != null) {
+            notification.setDeleted(true);
+            notificationsRepository.save(notification);
+            return true;
+        } else {
+            System.out.println("Notification not found with ID: " + notificationId);
+            return false;
+        }
     }
 
     // public List<NotificationsEntity> getNotificationsForUser(int userId) {

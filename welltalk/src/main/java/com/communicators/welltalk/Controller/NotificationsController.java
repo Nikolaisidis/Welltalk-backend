@@ -34,23 +34,6 @@ public class NotificationsController {
         return new ResponseEntity<>(newNotification, HttpStatus.CREATED);
     }
 
-    // Referral
-    @PostMapping("/createReferralTSNotification")
-    public ResponseEntity<NotificationsEntity> createReferralTeacherStudentNotification(@RequestParam int teacherId,
-            @RequestBody NotificationsDTO details) {
-        NotificationsEntity newNotification = notificationsService.createReferralTeacherStudentNotification(teacherId,
-                details);
-        return new ResponseEntity<>(newNotification, HttpStatus.CREATED);
-    }
-
-    // @PostMapping("/createReferralNotification")
-    // public ResponseEntity<NotificationsEntity> createReferralNotification(@RequestParam int teacherId,
-    //         @RequestBody NotificationsDTO details) {
-    //     NotificationsEntity newNotification = notificationsService.createReferralNotification(teacherId,
-    //             details);
-    //     return new ResponseEntity<>(newNotification, HttpStatus.CREATED);
-    // }
-
     @GetMapping("/getNotificationsByReceiver")
     public ResponseEntity<List<NotificationsEntity>> getNotificationsForStudents(@RequestParam int receiverId) {
         List<NotificationsEntity> notifications = notificationsService.getNotificationsByReceiver(receiverId);

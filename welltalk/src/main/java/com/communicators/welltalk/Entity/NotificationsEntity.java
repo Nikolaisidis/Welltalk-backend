@@ -20,6 +20,7 @@ public class NotificationsEntity {
     private String type;
     private boolean isRead;
     private LocalDateTime date;
+    private boolean isDeleted;
 
     @ManyToOne
     @JoinColumn(name = "sender_id", referencedColumnName = "id")
@@ -40,12 +41,13 @@ public class NotificationsEntity {
     public NotificationsEntity() {
     }
 
-    public NotificationsEntity(int notificationId, String type, boolean isRead, LocalDateTime date, UserEntity sender,
+    public NotificationsEntity(int notificationId, String type, boolean isRead, LocalDateTime date, boolean isDeleted, UserEntity sender,
             UserEntity receiver, AppointmentEntity appointment, ReferralEntity referral) {
         this.notificationId = notificationId;
         this.type = type;
         this.isRead = isRead;
         this.date = date;
+        this.isDeleted = isDeleted;
         this.sender = sender;
         this.receiver = receiver;
         this.appointment = appointment;
@@ -59,6 +61,7 @@ public class NotificationsEntity {
         this.sender = sender;
         this.receiver = receiver;
         this.appointment = appointment;
+        this.isDeleted = false;
         this.isRead = false;
     }
 
@@ -68,6 +71,7 @@ public class NotificationsEntity {
         this.sender = sender;
         this.receiver = receiver;
         this.referral = referral;
+        this.isDeleted = false;
         this.isRead = false;
     }
    
@@ -86,8 +90,6 @@ public class NotificationsEntity {
     public void setType(String type) {
         this.type = type;
     }
-
-    
 
     public LocalDateTime getDate() {
         return date;
@@ -134,17 +136,23 @@ public class NotificationsEntity {
         this.referral = referral;
     }
 
-
-
     public boolean isRead() {
         return isRead;
     }
 
-
-
     public void setRead(boolean isRead) {
         this.isRead = isRead;
     }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    
 
     // @PreUpdate
     // protected void onUpdate() {

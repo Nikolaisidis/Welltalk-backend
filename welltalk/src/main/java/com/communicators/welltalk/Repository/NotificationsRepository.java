@@ -19,6 +19,7 @@ public interface NotificationsRepository extends JpaRepository<NotificationsEnti
 
     List<NotificationsEntity> findBySender(UserEntity sender);
     List<NotificationsEntity> findByReceiver(UserEntity receiver);
+    List<NotificationsEntity> findByReceiverAndIsDeletedFalse(UserEntity receiver);
     NotificationsEntity findByNotificationId(int notificationId);
 
 }
