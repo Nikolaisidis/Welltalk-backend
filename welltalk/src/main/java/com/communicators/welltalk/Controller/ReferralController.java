@@ -75,6 +75,8 @@ public class ReferralController {
             @RequestBody ReferralEntity referral) {
         ReferralEntity newReferral = referralService.saveReferral(teacherId, referral);
 
+        notificationService.createReferralNotification(teacherId, newReferral);
+        
         return new ResponseEntity<>(newReferral, HttpStatus.CREATED);
     }
 
