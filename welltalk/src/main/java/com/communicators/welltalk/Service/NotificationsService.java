@@ -41,16 +41,20 @@ public class NotificationsService {
     public void createReferralNotification(int teacherId, ReferralEntity referral) {
         String type = "referral";
         UserEntity teacher = userService.getUserById(teacherId);
-        // UserEntity student = userService.getUserById(referral.getStudent().getId());
+        UserEntity student = userService.getUserById(referral.getStudent().getId());
         UserEntity counselor = userService.getUserById(referral.getCounselor().getId());
 
         // sender = teacher, receiver = teacher (notification to self)
         NotificationsEntity CounselorToTeacher = new NotificationsEntity(type, teacher, teacher, referral);
         notificationsRepository.save(CounselorToTeacher);
 
-        // sender = teacher, receiver = counselor
+        // sender = teacher, receiver = counselor 
         NotificationsEntity TeacherToCounselor = new NotificationsEntity(type, teacher, counselor, referral);
         notificationsRepository.save(TeacherToCounselor);
+
+        // sender = teacher, receiver = student
+        NotificationsEntity CounselorToStudent = new NotificationsEntity(type, teacher, student, referral);
+        notificationsRepository.save(CounselorToStudent);
 
         return;
     }
