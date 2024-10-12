@@ -52,7 +52,7 @@ public class StudentService {
             studentToUpdate.setPermanentAddress(student.getPermanentAddress());
             studentToUpdate.setParentGuardianName(student.getParentGuardianName());
             studentToUpdate.setParentGuardianContactNumber(student.getParentGuardianContactNumber());
-  
+
             // Save updated student
             studentToUpdate = studentRepository.save(studentToUpdate);
 
@@ -80,6 +80,10 @@ public class StudentService {
 
     public boolean doesStudentExist(String studentId) {
         return studentRepository.existsByIdNumberAndIsDeletedFalse(studentId);
+    }
+
+    public boolean doesStudentExistByInstitutionalEmail(String institutionalEmal) {
+        return studentRepository.existsByInstitutionalEmailAndIsDeletedFalse(institutionalEmal);
     }
 
     public StudentEntity getStudentByStudentId(String studentId) {

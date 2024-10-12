@@ -10,6 +10,7 @@ import com.communicators.welltalk.Entity.AssignedCounselorEntity;
 import com.communicators.welltalk.Entity.CounselorEntity;
 import com.communicators.welltalk.Entity.ReferralEntity;
 import com.communicators.welltalk.Entity.ReferralTokenEntity;
+import com.communicators.welltalk.Entity.StudentEntity;
 import com.communicators.welltalk.Entity.TeacherEntity;
 import com.communicators.welltalk.Repository.ReferralRepository;
 import com.communicators.welltalk.Repository.CounselorRepository;
@@ -79,6 +80,17 @@ public class ReferralService {
                 System.out.println("Counselor assigned to referral: " + counselor.getInstitutionalEmail());
             }
 
+        }
+
+        StudentEntity student = null;
+        if (studentService.doesStudentExist(referral.getStudentId())) {
+            student = studentService.getStudentByStudentId(referral.getStudentId());
+        } else if (studentService.doesStudentExistByInstitutionalEmail(referral.getStudentEmail())) {
+            student = studentService.getStudentByInstitutionalEmail(referral.getStudentEmail());
+        }
+
+        if (student != null) {
+            referral.setStudent(student);
         }
 
         ReferralEntity newReferral = referralRepository.save(referral);
