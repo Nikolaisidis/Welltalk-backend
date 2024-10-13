@@ -49,7 +49,8 @@ public class SecurityConfig {
                                         "/verifyUserAccount/**", "/user/referral/validateReferralToken/**",
                                         "/forgotPassword/**", "/validateChangePasswordToken/**", "/ws/**",
                                         "/sendEmail/**", "/websocket/**", "/hello.html", "/static/**",
-                                        "/user/referral/acceptReferral/**", "/user/referral/rejectReferral/**")
+                                        "/user/referral/acceptReferral/**", "/user/referral/rejectReferral/**",
+                                        "/checkEmail/**","/checkIdNumber/**")
                                 .permitAll()
                                 .anyRequest().authenticated())
                 .userDetailsService(userService)

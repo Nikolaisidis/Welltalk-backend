@@ -14,6 +14,7 @@ import com.communicators.welltalk.Repository.CounselorRepository;
 import com.communicators.welltalk.Repository.StudentRepository;
 import com.communicators.welltalk.Repository.TeacherRepository;
 import com.communicators.welltalk.Repository.UserRepository;
+import com.communicators.welltalk.dto.EmailCheckDTO;
 import com.communicators.welltalk.dto.PasswordChangeDTO;
 import com.communicators.welltalk.dto.PasswordVerificationDTO;
 
@@ -168,6 +169,14 @@ public class AuthenticationService {
         }
 
         return passwordEncoder.matches(request.getPassword(), user.getPassword());
+    }
+
+    public boolean emailExists(String email) {
+        return userRepository.existsByInstitutionalEmail(email);
+    }
+
+    public boolean idExists(String idNumber) {
+        return userRepository.existsByIdNumber(idNumber);
     }
 
 }

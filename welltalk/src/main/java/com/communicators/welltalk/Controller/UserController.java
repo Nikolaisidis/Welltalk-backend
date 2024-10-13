@@ -26,6 +26,8 @@ import com.communicators.welltalk.Service.AuthenticationService;
 import com.communicators.welltalk.Service.EmailService;
 import com.communicators.welltalk.Service.PasswordReset;
 import com.communicators.welltalk.Service.UserService;
+import com.communicators.welltalk.dto.EmailCheckDTO;
+import com.communicators.welltalk.dto.IdNumberCheckDTO;
 import com.communicators.welltalk.dto.PasswordChangeDTO;
 import com.communicators.welltalk.dto.PasswordVerificationDTO;
 
@@ -192,6 +194,26 @@ public class UserController {
             return ResponseEntity.ok(isValid ? "Password is correct." : "Password is incorrect.");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/checkEmail")
+    public ResponseEntity<?> checkEmail(@RequestBody EmailCheckDTO request) {
+        try {
+            boolean emailExists = authenticationService.emailExists(request.getEmail());
+            return ResponseEntity.ok(emailExists ? "Email exists." : "Email does not exist.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(e.getMessage());
+        }
+    }
+
+    @PostMapping("/checkIdNumber")
+    public ResponseEntity<?> checkIdNumber(@RequestBody IdNumberCheckDTO request) {
+        try {
+            boolean idExists = authenticationService.idExists(request.getIdNumber());
+            return ResponseEntity.ok(idExists ? "ID number exists." : "ID number does not exist.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(e.getMessage());
         }
     }
 
