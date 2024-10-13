@@ -120,6 +120,8 @@ public class ReferralController {
     @PutMapping("/rejectReferral")
     public ResponseEntity<ReferralEntity> rejectReferral(@RequestParam String token) {
         ReferralEntity updatedReferral = referralService.referralDeclinedByStudent(token);
+
+        notificationService.declinedReferralNotification(updatedReferral);
         return new ResponseEntity<>(updatedReferral, HttpStatus.OK);
     }
 

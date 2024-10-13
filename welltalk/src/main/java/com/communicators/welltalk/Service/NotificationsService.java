@@ -43,13 +43,14 @@ public class NotificationsService {
         return notificationsRepository.save(notification);
     }
 
+    // Referral
     public void createReferralNotification(int teacherId, ReferralEntity referral) {
         String type = "referral";
         UserEntity teacher = userService.getUserById(teacherId);
         UserEntity student = userService.getUserById(referral.getStudent().getId());
         UserEntity counselor = userService.getUserById(referral.getCounselor().getId());
 
-        // sender = teacher, receiver = teacher (notification to self)
+        // sender = teacher, receiver = teacher
         NotificationsEntity CounselorToTeacher = new NotificationsEntity(type, teacher, teacher, referral);
         notificationsRepository.save(CounselorToTeacher);
 
@@ -84,6 +85,28 @@ public class NotificationsService {
 
         System.out.println("Referral accepted notification created");
 
+        return;
+    }
+
+    public void declinedReferralNotification(ReferralEntity referral) {
+        String type = "referral_declined";
+        UserEntity teacher = userService.getUserById(referral.getTeacher().getId());
+        UserEntity student = userService.getUserById(referral.getStudent().getId());
+        UserEntity counselor = userService.getUserById(referral.getCounselor().getId());
+
+        // sender = student, receiver = student 
+        NotificationsEntity StudentToStudent = new NotificationsEntity(type, student, student, referral);
+        notificationsRepository.save(StudentToStudent);
+
+        // sender = student, receiver = counselor 
+        NotificationsEntity StudentToCounselor = new NotificationsEntity(type, student, counselor, referral);
+        notificationsRepository.save(StudentToCounselor);
+
+        // sender = counselor, receiver = teacher 
+        NotificationsEntity CounselorToTeacher = new NotificationsEntity(type, counselor, teacher, referral);
+        notificationsRepository.save(CounselorToTeacher);
+
+        System.out.println("Referral declined, notification created");
         return;
     }
 

@@ -154,7 +154,6 @@ public class ReferralService {
         referral.setStatus("Responded");
         referralRepository.save(referral);
         referralTokenService.deleteReferralToken(referralTokenEntity);
-        
         return referral;
     }
 
@@ -163,7 +162,7 @@ public class ReferralService {
         ReferralEntity referral = referralRepository
                 .findByReferralIdAndIsDeletedFalse(referralTokenEntity.getReferral().getReferralId());
         referral.setAccepted(false);
-        referral.setStatus("Responded");
+        referral.setStatus("Declined");
         referralRepository.save(referral);
         referralTokenService.deleteReferralToken(referralTokenEntity);
         return referral;
