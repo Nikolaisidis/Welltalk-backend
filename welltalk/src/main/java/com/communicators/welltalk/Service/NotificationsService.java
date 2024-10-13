@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.communicators.welltalk.Entity.AppointmentEntity;
 import com.communicators.welltalk.Entity.NotificationsEntity;
+import com.communicators.welltalk.Entity.PostEntity;
 import com.communicators.welltalk.Entity.ReferralEntity;
+import com.communicators.welltalk.Entity.StudentEntity;
 import com.communicators.welltalk.Entity.UserEntity;
 import com.communicators.welltalk.Repository.NotificationsRepository;
 import com.communicators.welltalk.dto.NotificationsDTO;
@@ -20,6 +22,9 @@ public class NotificationsService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private StudentService studentService;
 
     @Autowired
     private AppointmentService appointmentService;
@@ -55,6 +60,19 @@ public class NotificationsService {
         // sender = teacher, receiver = student
         NotificationsEntity CounselorToStudent = new NotificationsEntity(type, teacher, student, referral);
         notificationsRepository.save(CounselorToStudent);
+
+        return;
+    }
+
+    public void createPostNotification(int counselorId, PostEntity post) {
+        String type = "post";
+        UserEntity counselor = userService.getUserById(counselorId);
+
+        List<StudentEntity> students = studentService.getAllStudents();
+        for (StudentEntity student : students) {
+            NotificationsEntity notification = new NotificationsEntity(type, counselor, student, post);
+            notificationsRepository.save(notification);
+        }
 
         return;
     }

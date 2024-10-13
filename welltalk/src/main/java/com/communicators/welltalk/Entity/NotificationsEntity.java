@@ -38,11 +38,15 @@ public class NotificationsEntity {
     @JoinColumn(name = "ref_id", referencedColumnName = "referralId")
     private ReferralEntity referral; 
 
+    @ManyToOne
+    @JoinColumn(name = "post_id", referencedColumnName = "postId")
+    private PostEntity post; 
+
     public NotificationsEntity() {
     }
 
     public NotificationsEntity(int notificationId, String type, boolean isRead, LocalDateTime date, boolean isDeleted, UserEntity sender,
-            UserEntity receiver, AppointmentEntity appointment, ReferralEntity referral) {
+            UserEntity receiver, AppointmentEntity appointment, ReferralEntity referral, PostEntity post) {
         this.notificationId = notificationId;
         this.type = type;
         this.isRead = isRead;
@@ -52,6 +56,7 @@ public class NotificationsEntity {
         this.receiver = receiver;
         this.appointment = appointment;
         this.referral = referral;
+        this.post = post;
     }
 
 
@@ -74,6 +79,17 @@ public class NotificationsEntity {
         this.isDeleted = false;
         this.isRead = false;
     }
+
+    // post
+    public NotificationsEntity(String type, UserEntity sender, UserEntity receiver, PostEntity post) {
+        this.type = type;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.post = post;
+        this.isDeleted = false;
+        this.isRead = false;
+    }
+    
    
     public int getNotificationId() {
         return notificationId;
@@ -152,6 +168,15 @@ public class NotificationsEntity {
         this.isDeleted = isDeleted;
     }
 
+    public PostEntity getPost() {
+        return post;
+    }
+
+    public void setPost(PostEntity post) {
+        this.post = post;
+    }
+
+    
     
 
     // @PreUpdate
