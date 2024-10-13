@@ -112,6 +112,8 @@ public class ReferralController {
     @PutMapping("/acceptReferral")
     public ResponseEntity<ReferralEntity> acceptReferral(@RequestParam String token) {
         ReferralEntity updatedReferral = referralService.referralAcceptedByStudent(token);
+
+        notificationService.acceptedReferralNotification(updatedReferral);
         return new ResponseEntity<>(updatedReferral, HttpStatus.OK);
     }
 

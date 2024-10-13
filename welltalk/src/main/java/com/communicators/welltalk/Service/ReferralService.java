@@ -6,14 +6,13 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.communicators.welltalk.Entity.AssignedCounselorEntity;
 import com.communicators.welltalk.Entity.CounselorEntity;
 import com.communicators.welltalk.Entity.ReferralEntity;
 import com.communicators.welltalk.Entity.ReferralTokenEntity;
 import com.communicators.welltalk.Entity.StudentEntity;
 import com.communicators.welltalk.Entity.TeacherEntity;
-import com.communicators.welltalk.Repository.ReferralRepository;
 import com.communicators.welltalk.Repository.CounselorRepository;
+import com.communicators.welltalk.Repository.ReferralRepository;
 
 @Service
 public class ReferralService {
@@ -155,6 +154,7 @@ public class ReferralService {
         referral.setStatus("Responded");
         referralRepository.save(referral);
         referralTokenService.deleteReferralToken(referralTokenEntity);
+        
         return referral;
     }
 

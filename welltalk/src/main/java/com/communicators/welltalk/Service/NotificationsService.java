@@ -64,6 +64,29 @@ public class NotificationsService {
         return;
     }
 
+    public void acceptedReferralNotification(ReferralEntity referral) {
+        String type = "referral_accepted";
+        UserEntity teacher = userService.getUserById(referral.getTeacher().getId());
+        UserEntity student = userService.getUserById(referral.getStudent().getId());
+        UserEntity counselor = userService.getUserById(referral.getCounselor().getId());
+
+        // sender = student, receiver = student 
+        NotificationsEntity StudentToStudent = new NotificationsEntity(type, student, student, referral);
+        notificationsRepository.save(StudentToStudent);
+
+        // sender = student, receiver = counselor 
+        NotificationsEntity StudentToCounselor = new NotificationsEntity(type, student, counselor, referral);
+        notificationsRepository.save(StudentToCounselor);
+
+        // sender = counselor, receiver = teacher 
+        NotificationsEntity CounselorToTeacher = new NotificationsEntity(type, counselor, teacher, referral);
+        notificationsRepository.save(CounselorToTeacher);
+
+        System.out.println("Referral accepted notification created");
+
+        return;
+    }
+
     public void createPostNotification(int counselorId, PostEntity post) {
         String type = "post";
         UserEntity counselor = userService.getUserById(counselorId);
