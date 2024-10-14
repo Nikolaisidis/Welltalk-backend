@@ -117,13 +117,17 @@ public class AppointmentController {
             @RequestBody AppointmentEntity appointment) {
         AppointmentEntity updatedAppointment = appointmentService.markAppointmentAsDone(appointmentId,
                 appointment.getAppointmentNotes(), appointment.getAppointmentAdditionalNotes());
+        
+        notificationsService.markAppointmentAsDoneNotification(appointmentId);
         return new ResponseEntity<>(updatedAppointment, HttpStatus.OK);
     }
 
     @DeleteMapping("/deleteAppointment/{id}")
     public ResponseEntity<Void> deleteAppointment(@PathVariable int id) {
+        int toDelete = id;
         boolean deleted = appointmentService.deleteAppointment(id);
         if (deleted) {
+            notificationsService.cancelledAppointmentNotificationByStudent(toDelete);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -60,7 +60,6 @@ public class NotificationsService {
         NotificationsEntity StudentToCounselor = new NotificationsEntity(type, student, counselor, appointment);
         notificationsRepository.save(StudentToCounselor);
 
-        System.out.println("Appointment by Student Notification Created");
         return;
     }
 
@@ -76,8 +75,38 @@ public class NotificationsService {
         // sender = counselor, receiver = student
         NotificationsEntity CounselorToStudent = new NotificationsEntity(type, counselor, student, appointment);
         notificationsRepository.save(CounselorToStudent);
+        return;
+    }
 
-        System.out.println("Appointment by Counselor Notification Created");
+    public void cancelledAppointmentNotificationByStudent(int appointmentID){
+        String type = "appointment_cancelled";
+        AppointmentEntity appointment = appointmentService.getAppointmentByAppointmentId(appointmentID);    
+        UserEntity student = userService.getUserById(appointment.getStudent().getId());
+        UserEntity counselor = userService.getUserById(appointment.getAppointmentId());
+
+        // sender = student, receiver = student
+        NotificationsEntity StudentToStudent = new NotificationsEntity(type, student, student, appointment);
+        notificationsRepository.save(StudentToStudent);
+
+        // sender = student, receiver = counselor
+        NotificationsEntity StudentToCounselor = new NotificationsEntity(type, student, counselor, appointment);
+        notificationsRepository.save(StudentToCounselor);
+
+        System.out.println("Appointment cancelled notification created");
+        return;
+    }
+
+    public void markAppointmentAsDoneNotification(int appointmentID){
+        String type = "appointment_done";
+        AppointmentEntity appointment = appointmentService.getAppointmentByAppointmentId(appointmentID);    
+        UserEntity student = userService.getUserById(appointment.getStudent().getId());
+        UserEntity counselor = userService.getUserById(appointment.getAppointmentId());
+
+        // sender = counselor, receiver = student
+        NotificationsEntity CounselorToStudent = new NotificationsEntity(type, counselor, student, appointment);
+        notificationsRepository.save(CounselorToStudent);
+
+        System.out.println("Appointment marked as done");
         return;
     }
 
