@@ -204,7 +204,20 @@ public class AppointmentService {
     }
 
     public List<AppointmentEntity> getAppointmentsByDate(LocalDate date) {
-        return appointmentRepository.findByAppointmentDateAndIsDeletedFalse(date);
+        List<AppointmentEntity> appointments = appointmentRepository.findByAppointmentDateAndIsDeletedFalse(date);
+        LocalDateTime now = LocalDateTime.now();
+
+        for (AppointmentEntity appointment : appointments) {
+            LocalDateTime appointmentStart = LocalDateTime.of(appointment.getAppointmentDate(),
+                    LocalTime.parse(appointment.getAppointmentStartTime()));
+
+            if (now.isAfter(appointmentStart.plusHours(3))) {
+                appointment.setAppointmentStatus("Cancelled");
+                appointmentRepository.save(appointment);
+            }
+        }
+
+        return appointments;
     }
 
     public List<AppointmentEntity> getAppointmentsByDateAndCounselor(LocalDate date, int counselorId) {
@@ -214,6 +227,17 @@ public class AppointmentService {
 
         List<AppointmentEntity> appointments = appointmentRepository
                 .findByCounselorAndAppointmentDateAndIsDeletedFalse(counselor, date);
+        LocalDateTime now = LocalDateTime.now();
+
+        for (AppointmentEntity appointment : appointments) {
+            LocalDateTime appointmentStart = LocalDateTime.of(appointment.getAppointmentDate(),
+                    LocalTime.parse(appointment.getAppointmentStartTime()));
+    
+            if (now.isAfter(appointmentStart.plusHours(3))) {
+                appointment.setAppointmentStatus("Cancelled");
+                appointmentRepository.save(appointment);
+            }
+        }
 
         return appointments;
     }
@@ -233,7 +257,7 @@ public class AppointmentService {
 
     public List<AppointmentEntity> getAppointmentsByStudent(int studentId) {
         StudentEntity student = studentService.getStudentById(studentId);
-        List<AppointmentEntity> appointments = appointmentRepository.findByStudentAndIsDeletedFalse(student);
+        List<AppointmentEntity> appointments = appointmentRepository.findByStudent(student);
 
         // Sort appointments by appointmentDate and appointmentStartTime in descending
         // order
@@ -340,7 +364,7 @@ public class AppointmentService {
         CounselorEntity counselor = counselorRepository.findByIdAndIsDeletedFalse(counselorId)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Counselor with ID " + counselorId + " does not exist or is deleted."));
-        List<AppointmentEntity> appointments = appointmentRepository.findByCounselorAndIsDeletedFalse(counselor);
+        List<AppointmentEntity> appointments = appointmentRepository.findByCounselor(counselor);
 
         // Sort appointments by appointmentDate and appointmentStartTime
         appointments.sort(Comparator.comparing(AppointmentEntity::getAppointmentDate)
