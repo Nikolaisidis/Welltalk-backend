@@ -204,7 +204,20 @@ public class AppointmentService {
     }
 
     public List<AppointmentEntity> getAppointmentsByDate(LocalDate date) {
-        return appointmentRepository.findByAppointmentDateAndIsDeletedFalse(date);
+        List<AppointmentEntity> appointments = appointmentRepository.findByAppointmentDateAndIsDeletedFalse(date);
+        LocalDateTime now = LocalDateTime.now();
+
+        for (AppointmentEntity appointment : appointments) {
+            LocalDateTime appointmentStart = LocalDateTime.of(appointment.getAppointmentDate(),
+                    LocalTime.parse(appointment.getAppointmentStartTime()));
+
+            if (now.isAfter(appointmentStart.plusHours(3))) {
+                appointment.setAppointmentStatus("Cancelled");
+                appointmentRepository.save(appointment);
+            }
+        }
+
+        return appointments;
     }
 
     public List<AppointmentEntity> getAppointmentsByDateAndCounselor(LocalDate date, int counselorId) {
@@ -214,6 +227,17 @@ public class AppointmentService {
 
         List<AppointmentEntity> appointments = appointmentRepository
                 .findByCounselorAndAppointmentDateAndIsDeletedFalse(counselor, date);
+        LocalDateTime now = LocalDateTime.now();
+
+        for (AppointmentEntity appointment : appointments) {
+            LocalDateTime appointmentStart = LocalDateTime.of(appointment.getAppointmentDate(),
+                    LocalTime.parse(appointment.getAppointmentStartTime()));
+    
+            if (now.isAfter(appointmentStart.plusHours(3))) {
+                appointment.setAppointmentStatus("Cancelled");
+                appointmentRepository.save(appointment);
+            }
+        }
 
         return appointments;
     }
