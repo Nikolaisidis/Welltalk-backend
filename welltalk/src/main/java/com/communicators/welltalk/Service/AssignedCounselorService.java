@@ -55,6 +55,21 @@ public class AssignedCounselorService {
         if (user.getIsVerified()) {
             if (user instanceof StudentEntity) {
                 assignCounselorToStudent((StudentEntity) user);
+
+                // isVerified -> true
+
+                // notification.service (userid)
+                    // user -> fetch user by user Id
+                    // assignedCounselor - fetch counselor by user Id
+
+                    // if user.role == student && user.isVerified == 1
+                
+                        // notification 
+                            // type - verified_student
+                            // sender - assignedCounselor
+                            // receiver - assignedCounselor
+                            // user - user
+
             } else if (user instanceof TeacherEntity) {
                 assignCounselorToTeacher((TeacherEntity) user);
             } else if (user instanceof CounselorEntity) {

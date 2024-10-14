@@ -161,6 +161,22 @@ public class UserController {
     public ResponseEntity<Void> verifyUserAccount(@PathVariable int id) {
         boolean isVerified = userService.verifyUserAccount(id);
         if (isVerified) {
+
+            // isVerified -> true
+
+            // notification.service (userid)
+                // user -> fetch user by user Id
+                // assignedCounselor - fetch counselor by user Id
+
+                // if user.role == student && user.isVerified == 1
+            
+                    // notification 
+                        // type - verified_student
+                        // sender - assignedCounselor
+                        // receiver - assignedCounselor
+                        // user - user
+            
+            
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
