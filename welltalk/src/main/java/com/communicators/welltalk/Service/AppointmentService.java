@@ -233,7 +233,7 @@ public class AppointmentService {
 
     public List<AppointmentEntity> getAppointmentsByStudent(int studentId) {
         StudentEntity student = studentService.getStudentById(studentId);
-        List<AppointmentEntity> appointments = appointmentRepository.findByStudentAndIsDeletedFalse(student);
+        List<AppointmentEntity> appointments = appointmentRepository.findByStudent(student);
 
         // Sort appointments by appointmentDate and appointmentStartTime in descending
         // order
@@ -340,7 +340,7 @@ public class AppointmentService {
         CounselorEntity counselor = counselorRepository.findByIdAndIsDeletedFalse(counselorId)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Counselor with ID " + counselorId + " does not exist or is deleted."));
-        List<AppointmentEntity> appointments = appointmentRepository.findByCounselorAndIsDeletedFalse(counselor);
+        List<AppointmentEntity> appointments = appointmentRepository.findByCounselor(counselor);
 
         // Sort appointments by appointmentDate and appointmentStartTime
         appointments.sort(Comparator.comparing(AppointmentEntity::getAppointmentDate)
