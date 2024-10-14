@@ -29,6 +29,9 @@ public class NotificationsService {
     @Autowired
     private AppointmentService appointmentService;
 
+    @Autowired
+    private AssignedCounselorService assignedCounselorService;
+
     // @Autowired
     // private ReferralService referralService;
 
@@ -145,6 +148,7 @@ public class NotificationsService {
         return;
     }
 
+    // Post
     public void createPostNotification(int counselorId, PostEntity post) {
         String type = "post";
         UserEntity counselor = userService.getUserById(counselorId);
@@ -158,11 +162,33 @@ public class NotificationsService {
         return;
     }
 
+    // Assign Counselor
+    // public void createAssignedCounselorNotification(StudentEntity student){
+    //     String type = "assigned_counselor";
+    //     List<CounselorEntity> counselors = assignedCounselorService.getCounselorsByStudentId(student.getId());
+
+    //     try{
+    //         for (CounselorEntity counselor:counselors){
+    //             if (student.getIsVerified()) {
+    //                 NotificationsEntity notification = new NotificationsEntity(type, counselor, student);
+    //                 notificationsRepository.save(notification);
+    //             }
+    //         }
+
+    //         System.out.println("Assigned Counselor Notification Created");
+    //     } catch (Error e) {
+    //         System.out.println("Error creating Assigned Counselor Notification");
+    //     }
+        
+    // }
+
+    // Get Notifications
     public List<NotificationsEntity> getNotificationsByReceiver(int receiverId) {
         UserEntity receiver = userService.getUserById(receiverId);
         return notificationsRepository.findByReceiverAndIsDeletedFalse(receiver);
     }
 
+    // Mark as Read
     public void markAsRead(int id){
         NotificationsEntity notification = notificationsRepository.findByNotificationId(id);
         if (notification != null) {
@@ -172,7 +198,8 @@ public class NotificationsService {
             throw new RuntimeException("Notification not found with ID: " + id); 
         }
     }
-    
+
+    // Delete
     public boolean deleteNotification(int notificationId) {
         NotificationsEntity notification = notificationsRepository.findByNotificationId(notificationId);
 
@@ -185,36 +212,5 @@ public class NotificationsService {
             return false;
         }
     }
-
-    // public List<NotificationsEntity> getNotificationsForUser(int userId) {
-    //     UserEntity user = userService.getUserById(userId);
-    //     return notificationsRepository.findByUser(user);
-    // }
-
-    // public List<NotificationsEntity> getNotificationsForUser(int userId) {
-    //     UserEntity user = userService.getUserById(userId);
-    //     return notificationsRepository.findByUser(user);
-    // }
-
-    // public List<NotificationsEntity> getAllNotifications() {
-    //     return notificationsRepository.findAll();
-    // }
-
-    // public NotificationsEntity saveNotification(String message, int userId, String type) {
-    //     UserEntity user = userService.getUserById(userId);
-    //     NotificationsEntity notification = new NotificationsEntity(message, user, type);
-    //     notification.setUser(user);
-
-    //     return notificationsRepository.save(notification);
-    // }
-
-    // public void markAsRead(Long id) {
-    //     NotificationsEntity notification = notificationsRepository.findByNotificationId(id)
-    //             .orElseThrow(() -> new RuntimeException("Notification not found"));
-    //     notification.setRead(true);
-    //     notificationsRepository.save(notification);
-    // }
-
-    
 
 }

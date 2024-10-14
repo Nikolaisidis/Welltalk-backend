@@ -89,6 +89,15 @@ public class NotificationsEntity {
         this.isDeleted = false;
         this.isRead = false;
     }
+
+    // assigned counselor
+    public NotificationsEntity(String type, UserEntity sender, UserEntity receiver) {
+        this.type = type;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.isDeleted = false;
+        this.isRead = false;
+    }
     
    
     public int getNotificationId() {
