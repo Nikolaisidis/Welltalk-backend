@@ -43,6 +43,41 @@ public class NotificationsService {
         return notificationsRepository.save(notification);
     }
 
+    // Appointment
+    public void createAppointmentByStudentNotification(AppointmentEntity appointment) {
+        String type = "appointment";
+        UserEntity student = userService.getUserById(appointment.getStudent().getId());
+        UserEntity counselor = userService.getUserById(appointment.getCounselor().getId());
+
+        // sender = student, receiver = student
+        NotificationsEntity StudentToStudent = new NotificationsEntity(type, student, student, appointment);
+        notificationsRepository.save(StudentToStudent);
+
+        // sender = student, receiver = counselor
+        NotificationsEntity StudentToCounselor = new NotificationsEntity(type, student, counselor, appointment);
+        notificationsRepository.save(StudentToCounselor);
+
+        System.out.println("Appointment by Student Notification Created");
+        return;
+    }
+
+    public void createAppointmentByCounselorNotification(AppointmentEntity appointment) {
+        String type = "appointment";
+        UserEntity counselor = userService.getUserById(appointment.getCounselor().getId());
+        UserEntity student = userService.getUserById(appointment.getStudent().getId());
+        
+        // sender = counselor, receiver = counselor
+        NotificationsEntity CounselorToCounselor = new NotificationsEntity(type, counselor, counselor, appointment);
+        notificationsRepository.save(CounselorToCounselor);
+
+        // sender = counselor, receiver = student
+        NotificationsEntity CounselorToStudent = new NotificationsEntity(type, counselor, student, appointment);
+        notificationsRepository.save(CounselorToStudent);
+
+        System.out.println("Appointment by Counselor Notification Created");
+        return;
+    }
+
     // Referral
     public void createReferralNotification(int teacherId, ReferralEntity referral) {
         String type = "referral";
