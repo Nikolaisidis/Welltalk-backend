@@ -147,11 +147,9 @@ public class AppointmentService {
     }
 
     // Available Counselor
-    private CounselorEntity findAvailableCounselor(List<AssignedCounselorEntity> assignedCounselors, LocalDate date,
-            String startTime) {
+    private CounselorEntity findAvailableCounselor(List<AssignedCounselorEntity> assignedCounselors, LocalDate date, String startTime) {
         for (AssignedCounselorEntity assignedCounselor : assignedCounselors) {
-            CounselorEntity counselor = assignedCounselorService.getCounselorById(assignedCounselor.getCounselorId())
-                    .orElse(null);
+            CounselorEntity counselor = assignedCounselor.getCounselorId(); 
             if (counselor != null && !isCounselorBusy(counselor, date, startTime)) {
                 return counselor;
             }

@@ -32,6 +32,10 @@ public class AppointmentEntity {
     @JoinColumn(name = "referralId", referencedColumnName = "referralId", nullable = true)
     private ReferralEntity referral;
 
+    @ManyToOne
+    @JoinColumn(name = "outsideCounselorid", referencedColumnName = "id")
+    private CounselorEntity outsideCounselor;
+
     private LocalDate appointmentDate;
 
     private String appointmentStartTime;
@@ -59,7 +63,7 @@ public class AppointmentEntity {
     public AppointmentEntity(StudentEntity student, CounselorEntity counselor, LocalDate appointmentDate,
             String appointmentStartTime, String appointmentStatus,
             String appointmentNotes,
-            String appointmentType, String appointmentPurpose) {
+            String appointmentType, String appointmentPurpose, CounselorEntity outsideCounselor) {
         this.student = student;
         this.counselor = counselor;
         this.appointmentDate = appointmentDate;
@@ -69,6 +73,17 @@ public class AppointmentEntity {
         this.appointmentType = appointmentType;
         this.appointmentPurpose = appointmentPurpose;
         isDeleted = false;
+        this.outsideCounselor = outsideCounselor;
+    }
+
+
+    
+    public CounselorEntity getOutsideCounselor() {
+        return outsideCounselor;
+    }
+
+    public void setOutsideCounselor(CounselorEntity outsideCounselor) {
+        this.outsideCounselor = outsideCounselor;
     }
 
     public int getAppointmentId() {
