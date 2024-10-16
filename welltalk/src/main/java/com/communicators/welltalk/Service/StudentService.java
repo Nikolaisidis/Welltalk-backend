@@ -50,8 +50,10 @@ public class StudentService {
             studentToUpdate.setBirthDate(student.getBirthDate());
             studentToUpdate.setContactNumber(student.getContactNumber());
             studentToUpdate.setPermanentAddress(student.getPermanentAddress());
+            studentToUpdate.setCurrentAddress(student.getCurrentAddress());
             studentToUpdate.setParentGuardianName(student.getParentGuardianName());
             studentToUpdate.setParentGuardianContactNumber(student.getParentGuardianContactNumber());
+            studentToUpdate.setParentGuardianRelationship(student.getParentGuardianRelationship());
 
             // Save updated student
             studentToUpdate = studentRepository.save(studentToUpdate);
