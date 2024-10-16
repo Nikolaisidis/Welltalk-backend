@@ -10,7 +10,7 @@ import com.communicators.welltalk.Entity.CounselorEntity;
 import com.communicators.welltalk.Entity.ReferralEntity;
 import com.communicators.welltalk.Entity.ReferralTokenEntity;
 import com.communicators.welltalk.Entity.StudentEntity;
-import com.communicators.welltalk.Entity.TeacherEntity;
+import com.communicators.welltalk.Entity.UserEntity;
 import com.communicators.welltalk.Repository.CounselorRepository;
 import com.communicators.welltalk.Repository.ReferralRepository;
 
@@ -59,16 +59,16 @@ public class ReferralService {
     }
 
     public List<ReferralEntity> getReferralsByReferredById(int id) {
-        return referralRepository.findByTeacher_IdAndIsDeletedFalseOrderByReferralIdDesc(id);
+        return referralRepository.findByReferrer_IdAndIsDeletedFalseOrderByReferralIdDesc(id);
     }
 
     public List<ReferralEntity> getReferralsByCounselorId(int id) {
         return referralRepository.findByCounselor_IdAndIsDeletedFalseOrderByReferralIdDesc(id);
     }
 
-    public ReferralEntity saveReferral(int teacherId, ReferralEntity referral) {
-        TeacherEntity teacher = teacherService.getTeacherById(teacherId);
-        referral.setTeacher(teacher);
+    public ReferralEntity saveReferral(int referrerId, ReferralEntity referral) {
+        UserEntity user = userService.getUserById(referrerId);
+        referral.setReferrer(user);
 
         List<CounselorEntity> counselors = counselorRepository.findByIsDeletedFalseAndIsVerifiedTrue();
         for (CounselorEntity counselor : counselors) {
@@ -157,16 +157,17 @@ public class ReferralService {
         return referral;
     }
 
-    public ReferralEntity referralDeclinedByStudent(String token) {
-        ReferralTokenEntity referralTokenEntity = referralTokenService.getReferralToken(token);
-        ReferralEntity referral = referralRepository
-                .findByReferralIdAndIsDeletedFalse(referralTokenEntity.getReferral().getReferralId());
-        referral.setAccepted(false);
-        referral.setStatus("Declined");
-        referralRepository.save(referral);
-        referralTokenService.deleteReferralToken(referralTokenEntity);
-        return referral;
-    }
+    // public ReferralEntity referralDeclinedByStudent(String token) {
+    // ReferralTokenEntity referralTokenEntity =
+    // referralTokenService.getReferralToken(token);
+    // ReferralEntity referral = referralRepository
+    // .findByReferralIdAndIsDeletedFalse(referralTokenEntity.getReferral().getReferralId());
+    // referral.setAccepted(false);
+    // referral.setStatus("Declined");
+    // referralRepository.save(referral);
+    // referralTokenService.deleteReferralToken(referralTokenEntity);
+    // return referral;
+    // }
 
     public boolean deleteReferral(int id) {
         ReferralEntity referral = referralRepository.findByReferralIdAndIsDeletedFalse(id);

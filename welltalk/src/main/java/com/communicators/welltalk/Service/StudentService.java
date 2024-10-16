@@ -53,7 +53,7 @@ public class StudentService {
             studentToUpdate.setCurrentAddress(student.getCurrentAddress());
             studentToUpdate.setParentGuardianName(student.getParentGuardianName());
             studentToUpdate.setParentGuardianContactNumber(student.getParentGuardianContactNumber());
-            studentToUpdate.setParentGuardianRelationship(student.getParentGuardianRelationship());
+            studentToUpdate.setGuardianRelationship(student.getGuardianRelationship());
 
             // Save updated student
             studentToUpdate = studentRepository.save(studentToUpdate);

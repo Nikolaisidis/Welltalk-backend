@@ -117,7 +117,7 @@ public class AppointmentController {
             @RequestBody AppointmentEntity appointment) {
         AppointmentEntity updatedAppointment = appointmentService.markAppointmentAsDone(appointmentId,
                 appointment.getAppointmentNotes(), appointment.getAppointmentAdditionalNotes());
-        
+
         notificationsService.markAppointmentAsDoneNotification(appointmentId);
         return new ResponseEntity<>(updatedAppointment, HttpStatus.OK);
     }
@@ -143,7 +143,6 @@ public class AppointmentController {
         return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 
-  
     @GetMapping("/getAppointmentsByDateAndCounselor")
     public ResponseEntity<?> getAppointmentsByDateAndCounselor(
             @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
@@ -152,6 +151,13 @@ public class AppointmentController {
                 HttpStatus.OK);
     }
 
-
+    @PostMapping("/saveReferralAppointment")
+    public ResponseEntity<AppointmentEntity> saveReferralAppointment(@RequestParam int referralId,
+            @RequestParam int counselorId,
+            @RequestBody AppointmentEntity appointment) {
+        AppointmentEntity newAppointment = appointmentService.saveReferralAppointment(referralId, counselorId,
+                appointment);
+        return new ResponseEntity<>(newAppointment, HttpStatus.CREATED);
+    }
 
 }
