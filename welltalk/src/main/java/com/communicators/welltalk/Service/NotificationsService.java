@@ -67,7 +67,7 @@ public class NotificationsService {
         String type = "appointment";
         UserEntity counselor = userService.getUserById(appointment.getCounselor().getId());
         UserEntity student = userService.getUserById(appointment.getStudent().getId());
-        
+
         // sender = counselor, receiver = counselor
         NotificationsEntity CounselorToCounselor = new NotificationsEntity(type, counselor, counselor, appointment);
         notificationsRepository.save(CounselorToCounselor);
@@ -78,9 +78,9 @@ public class NotificationsService {
         return;
     }
 
-    public void cancelledAppointmentNotificationByStudent(int appointmentID){
+    public void cancelledAppointmentNotificationByStudent(int appointmentID) {
         String type = "appointment_cancelled";
-        AppointmentEntity appointment = appointmentService.getAppointmentByAppointmentId(appointmentID);    
+        AppointmentEntity appointment = appointmentService.getAppointmentByAppointmentId(appointmentID);
         UserEntity student = userService.getUserById(appointment.getStudent().getId());
         UserEntity counselor = userService.getUserById(appointment.getAppointmentId());
 
@@ -96,9 +96,9 @@ public class NotificationsService {
         return;
     }
 
-    public void markAppointmentAsDoneNotification(int appointmentID){
+    public void markAppointmentAsDoneNotification(int appointmentID) {
         String type = "appointment_done";
-        AppointmentEntity appointment = appointmentService.getAppointmentByAppointmentId(appointmentID);    
+        AppointmentEntity appointment = appointmentService.getAppointmentByAppointmentId(appointmentID);
         UserEntity student = userService.getUserById(appointment.getStudent().getId());
         UserEntity counselor = userService.getUserById(appointment.getAppointmentId());
 
@@ -114,40 +114,50 @@ public class NotificationsService {
     public void createReferralNotification(int teacherId, ReferralEntity referral) {
         String type = "referral";
         UserEntity teacher = userService.getUserById(teacherId);
-        UserEntity student = userService.getUserById(referral.getStudent().getId());
         UserEntity counselor = userService.getUserById(referral.getCounselor().getId());
+
+        if (referral.getStudent() != null) {
+            UserEntity student = userService.getUserById(referral.getStudent().getId());
+
+            // sender = teacher, receiver = student
+            NotificationsEntity CounselorToStudent = new NotificationsEntity(type, teacher, student, referral);
+            notificationsRepository.save(CounselorToStudent);
+
+        }
 
         // sender = teacher, receiver = teacher
         NotificationsEntity CounselorToTeacher = new NotificationsEntity(type, teacher, teacher, referral);
         notificationsRepository.save(CounselorToTeacher);
 
-        // sender = teacher, receiver = counselor 
+        // sender = teacher, receiver = counselor
         NotificationsEntity TeacherToCounselor = new NotificationsEntity(type, teacher, counselor, referral);
         notificationsRepository.save(TeacherToCounselor);
-
-        // sender = teacher, receiver = student
-        NotificationsEntity CounselorToStudent = new NotificationsEntity(type, teacher, student, referral);
-        notificationsRepository.save(CounselorToStudent);
 
         return;
     }
 
     public void acceptedReferralNotification(ReferralEntity referral) {
         String type = "referral_accepted";
-        UserEntity teacher = userService.getUserById(referral.getTeacher().getId());
-        UserEntity student = userService.getUserById(referral.getStudent().getId());
+        UserEntity teacher = userService.getUserById(referral.getReferrer().getId());
         UserEntity counselor = userService.getUserById(referral.getCounselor().getId());
 
-        // sender = student, receiver = student 
-        NotificationsEntity StudentToStudent = new NotificationsEntity(type, student, student, referral);
-        notificationsRepository.save(StudentToStudent);
+        if (referral.getStudent() != null) {
+            UserEntity student = userService.getUserById(referral.getStudent().getId());
 
-        // sender = student, receiver = counselor 
-        NotificationsEntity StudentToCounselor = new NotificationsEntity(type, student, counselor, referral);
-        notificationsRepository.save(StudentToCounselor);
+            // sender = student, receiver = student
+            NotificationsEntity StudentToStudent = new NotificationsEntity(type, student,
+                    student, referral);
+            notificationsRepository.save(StudentToStudent);
 
-        // sender = counselor, receiver = teacher 
-        NotificationsEntity CounselorToTeacher = new NotificationsEntity(type, counselor, teacher, referral);
+            // sender = student, receiver = counselor
+            NotificationsEntity StudentToCounselor = new NotificationsEntity(type,
+                    student, counselor, referral);
+            notificationsRepository.save(StudentToCounselor);
+        }
+
+        // sender = counselor, receiver = teacher
+        NotificationsEntity CounselorToTeacher = new NotificationsEntity(type,
+                counselor, teacher, referral);
         notificationsRepository.save(CounselorToTeacher);
 
         System.out.println("Referral accepted notification created");
@@ -155,27 +165,31 @@ public class NotificationsService {
         return;
     }
 
-    public void declinedReferralNotification(ReferralEntity referral) {
-        String type = "referral_declined";
-        UserEntity teacher = userService.getUserById(referral.getTeacher().getId());
-        UserEntity student = userService.getUserById(referral.getStudent().getId());
-        UserEntity counselor = userService.getUserById(referral.getCounselor().getId());
+    // public void declinedReferralNotification(ReferralEntity referral) {
+    // String type = "referral_declined";
+    // UserEntity teacher = userService.getUserById(referral.getReferrer().getId());
+    // UserEntity student = userService.getUserById(referral.getStudent().getId());
+    // UserEntity counselor =
+    // userService.getUserById(referral.getCounselor().getId());
 
-        // sender = student, receiver = student 
-        NotificationsEntity StudentToStudent = new NotificationsEntity(type, student, student, referral);
-        notificationsRepository.save(StudentToStudent);
+    // // sender = student, receiver = student
+    // NotificationsEntity StudentToStudent = new NotificationsEntity(type, student,
+    // student, referral);
+    // notificationsRepository.save(StudentToStudent);
 
-        // sender = student, receiver = counselor 
-        NotificationsEntity StudentToCounselor = new NotificationsEntity(type, student, counselor, referral);
-        notificationsRepository.save(StudentToCounselor);
+    // // sender = student, receiver = counselor
+    // NotificationsEntity StudentToCounselor = new NotificationsEntity(type,
+    // student, counselor, referral);
+    // notificationsRepository.save(StudentToCounselor);
 
-        // sender = counselor, receiver = teacher 
-        NotificationsEntity CounselorToTeacher = new NotificationsEntity(type, counselor, teacher, referral);
-        notificationsRepository.save(CounselorToTeacher);
+    // // sender = counselor, receiver = teacher
+    // NotificationsEntity CounselorToTeacher = new NotificationsEntity(type,
+    // counselor, teacher, referral);
+    // notificationsRepository.save(CounselorToTeacher);
 
-        System.out.println("Referral declined, notification created");
-        return;
-    }
+    // System.out.println("Referral declined, notification created");
+    // return;
+    // }
 
     // Post
     public void createPostNotification(int counselorId, PostEntity post) {
@@ -193,22 +207,24 @@ public class NotificationsService {
 
     // Assign Counselor
     // public void createAssignedCounselorNotification(StudentEntity student){
-    //     String type = "assigned_counselor";
-    //     List<CounselorEntity> counselors = assignedCounselorService.getCounselorsByStudentId(student.getId());
+    // String type = "assigned_counselor";
+    // List<CounselorEntity> counselors =
+    // assignedCounselorService.getCounselorsByStudentId(student.getId());
 
-    //     try{
-    //         for (CounselorEntity counselor:counselors){
-    //             if (student.getIsVerified()) {
-    //                 NotificationsEntity notification = new NotificationsEntity(type, counselor, student);
-    //                 notificationsRepository.save(notification);
-    //             }
-    //         }
+    // try{
+    // for (CounselorEntity counselor:counselors){
+    // if (student.getIsVerified()) {
+    // NotificationsEntity notification = new NotificationsEntity(type, counselor,
+    // student);
+    // notificationsRepository.save(notification);
+    // }
+    // }
 
-    //         System.out.println("Assigned Counselor Notification Created");
-    //     } catch (Error e) {
-    //         System.out.println("Error creating Assigned Counselor Notification");
-    //     }
-        
+    // System.out.println("Assigned Counselor Notification Created");
+    // } catch (Error e) {
+    // System.out.println("Error creating Assigned Counselor Notification");
+    // }
+
     // }
 
     // Get Notifications
@@ -218,13 +234,13 @@ public class NotificationsService {
     }
 
     // Mark as Read
-    public void markAsRead(int id){
+    public void markAsRead(int id) {
         NotificationsEntity notification = notificationsRepository.findByNotificationId(id);
         if (notification != null) {
             notification.setRead(true);
             notificationsRepository.save(notification);
         } else {
-            throw new RuntimeException("Notification not found with ID: " + id); 
+            throw new RuntimeException("Notification not found with ID: " + id);
         }
     }
 

@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.OneToOne;
 
 @Entity
 @Table(name = "tblappointment")
@@ -28,7 +29,7 @@ public class AppointmentEntity {
     @JoinColumn(name = "counselorId", referencedColumnName = "id")
     private CounselorEntity counselor;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "referralId", referencedColumnName = "referralId", nullable = true)
     private ReferralEntity referral;
 
@@ -76,8 +77,6 @@ public class AppointmentEntity {
         this.outsideCounselor = outsideCounselor;
     }
 
-
-    
     public CounselorEntity getOutsideCounselor() {
         return outsideCounselor;
     }

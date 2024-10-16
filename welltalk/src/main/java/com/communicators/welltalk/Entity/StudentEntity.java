@@ -29,6 +29,8 @@ public class StudentEntity extends UserEntity {
     private String permanentAddress;
     private String parentGuardianName;
     private String parentGuardianContactNumber;
+    private String guardianRelationship;
+    private String currentAddress;
     // private String barangay;
     // private String city;
     // private String province;
@@ -41,10 +43,10 @@ public class StudentEntity extends UserEntity {
     public StudentEntity(String institutionalEmail, String idNumber, String firstName, String lastName, String gender,
             String password, String image, String role, String college, String program, int year, LocalDate birthDate,
             String contactNumber, String permanentAddress, /*
-                                                           * String barangay, String city, String province,
-                                                           * String zipCode,
-                                                           */ String parentGuardianName,
-            String parentGuardianContactNumber) {
+                                                            * String barangay, String city, String province,
+                                                            * String zipCode,
+                                                            */ String parentGuardianName,
+            String parentGuardianContactNumber, String guardianRelationship, String currentAddress) {
         super(institutionalEmail, idNumber, firstName, lastName, gender, password, image, role, college, program);
         // this.college = college;
         // this.program = program;
@@ -58,15 +60,17 @@ public class StudentEntity extends UserEntity {
         // this.zipCode = zipCode;
         this.parentGuardianContactNumber = parentGuardianContactNumber;
         this.parentGuardianName = parentGuardianName;
+        this.guardianRelationship = guardianRelationship;
+        this.currentAddress = currentAddress;
     }
 
     public StudentEntity(/* int teacherId, */ String institutionalEmail, String idNumber, String firstName,
             String lastName,
             String gender, String password, String role, String college, String program, int year, LocalDate birthDate,
             String contactNumber, String permanentAddress, /*
-                                                           * String barangay, String city, String province,
-                                                           * String zipCode,
-                                                           */ String parentGuardianName,
+                                                            * String barangay, String city, String province,
+                                                            * String zipCode,
+                                                            */ String parentGuardianName,
             String parentGuardianContactNumber) {
         super(institutionalEmail, idNumber, firstName, lastName, gender, password, role, college, program);
         // this.college = college;
@@ -145,6 +149,22 @@ public class StudentEntity extends UserEntity {
 
     public void setPermanentAddress(String permanentAddress) {
         this.permanentAddress = permanentAddress;
+    }
+
+    public String getGuardianRelationship() {
+        return guardianRelationship;
+    }
+
+    public void setGuardianRelationship(String guardianRelationship) {
+        this.guardianRelationship = guardianRelationship;
+    }
+
+    public String getCurrentAddress() {
+        return currentAddress;
+    }
+
+    public void setCurrentAddress(String currentAddress) {
+        this.currentAddress = currentAddress;
     }
 
     // public String getBarangay() {
