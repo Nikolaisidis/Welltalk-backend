@@ -65,7 +65,7 @@ public class StudentEntity extends UserEntity {
                                                             * String barangay, String city, String province,
                                                             * String zipCode,
                                                             */ String parentGuardianName,
-            String parentGuardianContactNumber) {
+            String parentGuardianContactNumber, String currentAddress, String guardianRelationship) {
         super(institutionalEmail, idNumber, firstName, lastName, gender, password, role, college, program);
         // this.college = college;
         // this.program = program;
@@ -76,7 +76,7 @@ public class StudentEntity extends UserEntity {
         this.currentAddress = currentAddress;
         this.parentGuardianContactNumber = parentGuardianContactNumber;
         this.parentGuardianName = parentGuardianName;
-        this.parentGuardianRelationship = parentGuardianRelationship;
+        this.guardianRelationship = guardianRelationship;
     }
 
     public String getParentGuardianName() {
