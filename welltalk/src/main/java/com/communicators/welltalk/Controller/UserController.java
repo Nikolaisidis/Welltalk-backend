@@ -127,6 +127,12 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    @GetMapping("/getAllUnverifiedStudents/{counselorId}")
+    public ResponseEntity<List<UserEntity>> getUnverifiedStudents(@PathVariable int counselorId) {
+        List<UserEntity> unverifiedStudents = userService.getAllUnverifiedStudents(counselorId);
+        return new ResponseEntity<>(unverifiedStudents, HttpStatus.OK);
+    }
+
     @GetMapping("/getAllVerifiedUsers")
     public ResponseEntity<List<UserEntity>> getAllVerifiedUsers() {
         List<UserEntity> users = userService.getAllVerifiedUsers();
