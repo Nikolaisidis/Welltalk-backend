@@ -53,22 +53,45 @@ public class AppointmentService {
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Counselor with ID " + counselorId + " does not exist or is deleted."));
         StudentEntity student = studentService.getStudentById(studentId);
-
-        appointment.setCounselor(counselor);
+    
+        // Check if the counselor matches the student's program, college, and assigned year
+        boolean isMatchingCounselor = counselor.getProgram().contains(student.getProgram()) &&
+                counselor.getCollege().equals(student.getCollege()) &&
+                counselor.getAssignedYear().contains(String.valueOf(student.getYear()));
+    
+        // Set counselor or outside counselor based on the match
+        if (isMatchingCounselor) {
+            appointment.setCounselor(counselor);
+        } else {
+            appointment.setOutsideCounselor(counselor);
+        }
+    
         appointment.setStudent(student);
         appointment.setAppointmentStatus("Pending");
-
+    
+        // Save the appointment
         AppointmentEntity appointmentCreated = appointmentRepository.save(appointment);
-
+    
+        // Prepare email message
+        String emailAddress;
+        if (appointmentCreated.getCounselor() != null) {
+            emailAddress = appointmentCreated.getCounselor().getInstitutionalEmail();
+        } else if (appointmentCreated.getOutsideCounselor() != null) {
+            emailAddress = appointmentCreated.getOutsideCounselor().getInstitutionalEmail();
+        } else {
+            // Handle case where both are null
+            throw new IllegalStateException("Neither counselor nor outside counselor is set.");
+        }
+    
         String message = "An appointment has been created for you. Date: " + appointment.getAppointmentDate()
                 + " Time: " + appointment.getAppointmentStartTime() + " Purpose: " + appointment.getAppointmentPurpose()
                 + " Type: " + appointment.getAppointmentType() + " Please wait for the counselor to assign you a time.";
-
-        emailService.sendSimpleMessage(appointmentCreated.getStudent().getInstitutionalEmail(), "Appointment Created",
-                message);
-
+    
+        emailService.sendSimpleMessage(emailAddress, "Appointment Created", message);
+    
         return appointmentCreated;
     }
+    
 
     public AppointmentEntity saveAppointment(int id, AppointmentEntity appointment) {
         StudentEntity student = studentService.getStudentById(id);
@@ -147,9 +170,10 @@ public class AppointmentService {
     }
 
     // Available Counselor
-    private CounselorEntity findAvailableCounselor(List<AssignedCounselorEntity> assignedCounselors, LocalDate date, String startTime) {
+    private CounselorEntity findAvailableCounselor(List<AssignedCounselorEntity> assignedCounselors, LocalDate date,
+            String startTime) {
         for (AssignedCounselorEntity assignedCounselor : assignedCounselors) {
-            CounselorEntity counselor = assignedCounselor.getCounselorId(); 
+            CounselorEntity counselor = assignedCounselor.getCounselorId();
             if (counselor != null && !isCounselorBusy(counselor, date, startTime)) {
                 return counselor;
             }
@@ -230,7 +254,7 @@ public class AppointmentService {
         for (AppointmentEntity appointment : appointments) {
             LocalDateTime appointmentStart = LocalDateTime.of(appointment.getAppointmentDate(),
                     LocalTime.parse(appointment.getAppointmentStartTime()));
-    
+
             if (now.isAfter(appointmentStart.plusHours(3))) {
                 appointment.setAppointmentStatus("Cancelled");
                 appointmentRepository.save(appointment);
@@ -362,12 +386,12 @@ public class AppointmentService {
         CounselorEntity counselor = counselorRepository.findByIdAndIsDeletedFalse(counselorId)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Counselor with ID " + counselorId + " does not exist or is deleted."));
-        List<AppointmentEntity> appointments = appointmentRepository.findByCounselor(counselor);
-
-        // Sort appointments by appointmentDate and appointmentStartTime
+    
+        List<AppointmentEntity> appointments = appointmentRepository.findByCounselorOrOutsideCounselor(counselor, counselor);
+    
         appointments.sort(Comparator.comparing(AppointmentEntity::getAppointmentDate)
                 .thenComparing(AppointmentEntity::getAppointmentStartTime));
-
+    
         return appointments;
     }
 

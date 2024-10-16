@@ -25,6 +25,7 @@ public class AppointmentEntity {
     private StudentEntity student;
 
     @ManyToOne
+
     @JoinColumn(name = "counselorId", referencedColumnName = "id")
     private CounselorEntity counselor;
 
@@ -103,8 +104,9 @@ public class AppointmentEntity {
     }
 
     public CounselorEntity getCounselor() {
-        return counselor;
+        return counselor != null ? counselor : outsideCounselor;
     }
+
 
     public void setCounselor(CounselorEntity counselor) {
         this.counselor = counselor;
