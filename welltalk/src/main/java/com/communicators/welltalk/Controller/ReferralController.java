@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.communicators.welltalk.Entity.ReferralEntity;
 import com.communicators.welltalk.Service.EmailService;
+import com.communicators.welltalk.Service.EmailTemplates;
+import com.communicators.welltalk.Service.NotificationsService;
 import com.communicators.welltalk.Service.ReferralService;
 import com.communicators.welltalk.Service.ReferralTokenService;
 
@@ -33,7 +35,10 @@ public class ReferralController {
     private ReferralTokenService referralTokenService;
 
     @Autowired
-    private EmailService emailService;
+    private NotificationsService notificationService;
+
+    @Autowired
+    private EmailTemplates emailTemplates;
 
     @GetMapping("/getAllReferrals")
     public ResponseEntity<List<ReferralEntity>> getAllReferrals() {
@@ -57,16 +62,26 @@ public class ReferralController {
         return new ResponseEntity<>(referrals, HttpStatus.OK);
     }
 
-    @PutMapping("/markReferralAsAccepted")
-    public ResponseEntity<ReferralEntity> markReferralAsAccepted(@RequestParam int id) {
-        ReferralEntity updatedReferral = referralService.markReferralAsAccepted(id);
-        return new ResponseEntity<>(updatedReferral, HttpStatus.OK);
+    // @PutMapping("/markReferralAsAccepted")
+    // public ResponseEntity<ReferralEntity> markReferralAsAccepted(@RequestParam
+    // int id) {
+    // ReferralEntity updatedReferral = referralService.markReferralAsAccepted(id);
+    // return new ResponseEntity<>(updatedReferral, HttpStatus.OK);
+    // }
+
+    @GetMapping("/getReferralsByCounselorId")
+    public ResponseEntity<List<ReferralEntity>> getReferralByCounselorId(@RequestParam int id) {
+        List<ReferralEntity> referrals = referralService.getReferralsByCounselorId(id);
+        return new ResponseEntity<>(referrals, HttpStatus.OK);
     }
 
     @PostMapping("/createReferral")
-    public ResponseEntity<ReferralEntity> insertReferral(@RequestParam int teacherId,
+    public ResponseEntity<ReferralEntity> insertReferral(@RequestParam int referrerId,
             @RequestBody ReferralEntity referral) {
-        ReferralEntity newReferral = referralService.saveReferral(teacherId, referral);
+        ReferralEntity newReferral = referralService.saveReferral(referrerId, referral);
+
+        notificationService.createReferralNotification(referrerId, newReferral);
+
         return new ResponseEntity<>(newReferral, HttpStatus.CREATED);
     }
 
@@ -97,6 +112,44 @@ public class ReferralController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PutMapping("/acceptReferral")
+    public ResponseEntity<ReferralEntity> acceptReferral(@RequestParam String token) {
+        ReferralEntity updatedReferral = referralService.referralAcceptedByStudent(token);
+
+        notificationService.acceptedReferralNotification(updatedReferral);
+        emailTemplates.sendReferralAcknowledgementToReferrer(updatedReferral);
+        emailTemplates.sendReferralAcknowledgementToTeacher(updatedReferral);
+        return new ResponseEntity<>(updatedReferral, HttpStatus.OK);
+    }
+
+    // @PutMapping("/rejectReferral")
+    // public ResponseEntity<ReferralEntity> rejectReferral(@RequestParam String
+    // token) {
+    // ReferralEntity updatedReferral =
+    // referralService.referralDeclinedByStudent(token);
+
+    // notificationService.declinedReferralNotification(updatedReferral);
+    // return new ResponseEntity<>(updatedReferral, HttpStatus.OK);
+    // }
+
+    @GetMapping("/getReferralTokenByReferralId")
+    public ResponseEntity<String> getReferralTokenByReferralId(@RequestParam int referralId) {
+        String token = referralTokenService.getReferralTokenByReferralId(referralId);
+        return new ResponseEntity<>(token, HttpStatus.OK);
+    }
+
+    @GetMapping("/getActiveAcceptedReferral")
+    public ResponseEntity<?> checkActiveAcceptedReferral(@RequestParam String studentEmail) {
+        boolean isActiveAcceptedReferral = referralService.checkActiveAcceptedReferral(studentEmail);
+        return new ResponseEntity<>(isActiveAcceptedReferral, HttpStatus.OK);
+    }
+
+    @GetMapping("/getReferralToken")
+    public ResponseEntity<String> getReferralToken(@RequestParam int referralId) {
+        String token = referralTokenService.getReferralTokenByReferralId(referralId);
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
 }

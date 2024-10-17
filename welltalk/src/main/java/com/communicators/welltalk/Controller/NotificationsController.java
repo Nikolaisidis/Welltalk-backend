@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,30 +28,25 @@ public class NotificationsController {
     // Appointment
     @PostMapping("/createAppointmentNotification")
     public ResponseEntity<NotificationsEntity> createAppointmentNotification(@RequestParam int senderId,
-            @RequestBody NotificationsDTO notificationDetails) {
+            @RequestBody NotificationsDTO details) {
         NotificationsEntity newNotification = notificationsService.createAppointmentNotification(senderId,
-                notificationDetails);
+                details);
         return new ResponseEntity<>(newNotification, HttpStatus.CREATED);
     }
 
-    @GetMapping("/getNotificationsForStudents")
+    @GetMapping("/getNotificationsByReceiver")
     public ResponseEntity<List<NotificationsEntity>> getNotificationsForStudents(@RequestParam int receiverId) {
-        List<NotificationsEntity> notifications = notificationsService.getNotificationsForStudents(receiverId);
+        List<NotificationsEntity> notifications = notificationsService.getNotificationsByReceiver(receiverId);
         return new ResponseEntity<>(notifications, HttpStatus.OK);
     }
 
-    @GetMapping("/getNotificationsForCounselors")
-    public ResponseEntity<List<NotificationsEntity>> getNotificationsForCounselors(@RequestParam int receiverId) {
-        List<NotificationsEntity> notifications = notificationsService.getNotifications(receiverId);
-        return new ResponseEntity<>(notifications, HttpStatus.OK);
-    }
+    @PutMapping("/markAsRead")
+    public ResponseEntity<Void> markAsRead(@RequestParam int notificationId) {
+        notificationsService.markAsRead(notificationId);
 
-    @GetMapping("/getNotificationsForTeachers")
-    public ResponseEntity<List<NotificationsEntity>> getNotificationsForTeachers(@RequestParam int receiverId){
-        List<NotificationsEntity> notifications = notificationsService.getNotifications(receiverId);
-        return new ResponseEntity<>(notifications, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
-
+    
     @DeleteMapping("/deleteNotification")
     public ResponseEntity<Void> deleteNotification(@RequestParam int notificationId) {
         notificationsService.deleteNotification(notificationId);

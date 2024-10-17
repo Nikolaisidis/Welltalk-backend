@@ -20,6 +20,7 @@ public class NotificationsEntity {
     private String type;
     private boolean isRead;
     private LocalDateTime date;
+    private boolean isDeleted;
 
     @ManyToOne
     @JoinColumn(name = "sender_id", referencedColumnName = "id")
@@ -33,19 +34,31 @@ public class NotificationsEntity {
     @JoinColumn(name = "app_id", referencedColumnName = "appointmentId")
     private AppointmentEntity appointment; 
 
+    @ManyToOne
+    @JoinColumn(name = "ref_id", referencedColumnName = "referralId")
+    private ReferralEntity referral; 
+
+    @ManyToOne
+    @JoinColumn(name = "post_id", referencedColumnName = "postId")
+    private PostEntity post; 
+
     public NotificationsEntity() {
     }
 
-    public NotificationsEntity(int notificationId, String type, boolean isRead, LocalDateTime date, UserEntity sender,
-            UserEntity receiver, AppointmentEntity appointment) {
+    public NotificationsEntity(int notificationId, String type, boolean isRead, LocalDateTime date, boolean isDeleted, UserEntity sender,
+            UserEntity receiver, AppointmentEntity appointment, ReferralEntity referral, PostEntity post) {
         this.notificationId = notificationId;
         this.type = type;
         this.isRead = isRead;
         this.date = date;
+        this.isDeleted = isDeleted;
         this.sender = sender;
         this.receiver = receiver;
         this.appointment = appointment;
+        this.referral = referral;
+        this.post = post;
     }
+
 
     // appointment
     public NotificationsEntity(String type, UserEntity sender, UserEntity receiver, AppointmentEntity appointment) {
@@ -53,7 +66,39 @@ public class NotificationsEntity {
         this.sender = sender;
         this.receiver = receiver;
         this.appointment = appointment;
+        this.isDeleted = false;
+        this.isRead = false;
     }
+
+    // referral
+    public NotificationsEntity(String type, UserEntity sender, UserEntity receiver, ReferralEntity referral) {
+        this.type = type;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.referral = referral;
+        this.isDeleted = false;
+        this.isRead = false;
+    }
+
+    // post
+    public NotificationsEntity(String type, UserEntity sender, UserEntity receiver, PostEntity post) {
+        this.type = type;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.post = post;
+        this.isDeleted = false;
+        this.isRead = false;
+    }
+
+    // assigned counselor
+    public NotificationsEntity(String type, UserEntity sender, UserEntity receiver) {
+        this.type = type;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.isDeleted = false;
+        this.isRead = false;
+    }
+    
    
     public int getNotificationId() {
         return notificationId;
@@ -69,14 +114,6 @@ public class NotificationsEntity {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public boolean isRead() {
-        return isRead;
-    }
-
-    public void setRead(boolean isRead) {
-        this.isRead = isRead;
     }
 
     public LocalDateTime getDate() {
@@ -115,6 +152,41 @@ public class NotificationsEntity {
     protected void onCreate() {
         date = LocalDateTime.now();
     }
+
+    public ReferralEntity getReferral() {
+        return referral;
+    }
+
+    public void setReferral(ReferralEntity referral) {
+        this.referral = referral;
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean isRead) {
+        this.isRead = isRead;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    public PostEntity getPost() {
+        return post;
+    }
+
+    public void setPost(PostEntity post) {
+        this.post = post;
+    }
+
+    
+    
 
     // @PreUpdate
     // protected void onUpdate() {

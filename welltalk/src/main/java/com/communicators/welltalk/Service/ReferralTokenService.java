@@ -43,4 +43,18 @@ public class ReferralTokenService {
         ReferralTokenEntity referralToken = referralTokenRepository.findByToken(token).orElse(null);
         return referralToken != null && !isTokenExpired(referralToken);
     }
+
+    public ReferralTokenEntity getReferralToken(String token) {
+        return referralTokenRepository.findByToken(token).orElse(null);
+    }
+
+    public void deleteReferralToken(ReferralTokenEntity referralToken) {
+        referralTokenRepository.delete(referralToken);
+    }
+
+    public String getReferralTokenByReferralId(int referralId) {
+        ReferralTokenEntity referralTokenEntity = referralTokenRepository.findByReferral_ReferralId(referralId);
+        String token = referralTokenEntity.getToken();
+        return token;
+    }
 }

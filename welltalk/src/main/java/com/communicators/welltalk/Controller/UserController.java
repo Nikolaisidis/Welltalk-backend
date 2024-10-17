@@ -14,19 +14,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.communicators.welltalk.Entity.AuthenticationResponse;
 import com.communicators.welltalk.Entity.PasswordResetTokenEntity;
 import com.communicators.welltalk.Entity.UserEntity;
-import com.communicators.welltalk.Service.AuthenticationService;
-import com.communicators.welltalk.Service.PasswordReset;
-import com.communicators.welltalk.Service.UserService;
-import com.communicators.welltalk.dto.PasswordChangeDTO;
 import com.communicators.welltalk.Repository.PasswordResetTokenRepository;
 import com.communicators.welltalk.Repository.UserRepository;
+import com.communicators.welltalk.Service.AuthenticationService;
 import com.communicators.welltalk.Service.EmailService;
+import com.communicators.welltalk.Service.PasswordReset;
+import com.communicators.welltalk.Service.UserService;
+import com.communicators.welltalk.dto.EmailCheckDTO;
+import com.communicators.welltalk.dto.IdNumberCheckDTO;
+import com.communicators.welltalk.dto.PasswordChangeDTO;
+import com.communicators.welltalk.dto.PasswordVerificationDTO;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
@@ -124,6 +127,12 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    @GetMapping("/getAllUnverifiedStudents/{counselorId}")
+    public ResponseEntity<List<UserEntity>> getUnverifiedStudents(@PathVariable int counselorId) {
+        List<UserEntity> unverifiedStudents = userService.getAllUnverifiedStudents(counselorId);
+        return new ResponseEntity<>(unverifiedStudents, HttpStatus.OK);
+    }
+
     @GetMapping("/getAllVerifiedUsers")
     public ResponseEntity<List<UserEntity>> getAllVerifiedUsers() {
         List<UserEntity> users = userService.getAllVerifiedUsers();
@@ -158,6 +167,22 @@ public class UserController {
     public ResponseEntity<Void> verifyUserAccount(@PathVariable int id) {
         boolean isVerified = userService.verifyUserAccount(id);
         if (isVerified) {
+
+            // isVerified -> true
+
+            // notification.service (userid)
+                // user -> fetch user by user Id
+                // assignedCounselor - fetch counselor by user Id
+
+                // if user.role == student && user.isVerified == 1
+            
+                    // notification 
+                        // type - verified_student
+                        // sender - assignedCounselor
+                        // receiver - assignedCounselor
+                        // user - user
+            
+            
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -183,4 +208,35 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Token is invalid");
         }
     }
+
+    @PostMapping("/verifyPassword")
+    public ResponseEntity<?> verifyPassword(@RequestBody PasswordVerificationDTO request) {
+        try {
+            boolean isValid = authenticationService.verifyPassword(request);
+            return ResponseEntity.ok(isValid ? "Password is correct." : "Password is incorrect.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/checkEmail")
+    public ResponseEntity<?> checkEmail(@RequestBody EmailCheckDTO request) {
+        try {
+            boolean emailExists = authenticationService.emailExists(request.getEmail());
+            return ResponseEntity.ok(emailExists ? "Email exists." : "Email does not exist.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(e.getMessage());
+        }
+    }
+
+    @PostMapping("/checkIdNumber")
+    public ResponseEntity<?> checkIdNumber(@RequestBody IdNumberCheckDTO request) {
+        try {
+            boolean idExists = authenticationService.idExists(request.getIdNumber());
+            return ResponseEntity.ok(idExists ? "ID number exists." : "ID number does not exist.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(e.getMessage());
+        }
+    }
+
 }

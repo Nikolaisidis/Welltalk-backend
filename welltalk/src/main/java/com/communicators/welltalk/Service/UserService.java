@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.communicators.welltalk.Entity.Role;
 import com.communicators.welltalk.Entity.UserEntity;
 import com.communicators.welltalk.Repository.UserRepository;
 
@@ -29,6 +30,16 @@ public class UserService implements UserDetailsService {
 
     public List<UserEntity> getAllUnverifiedUsers() {
         return userRepository.findByIsDeletedFalseAndIsVerifiedFalse();
+    }
+
+    public List<UserEntity> getAllUnverifiedStudents(int counselorId) {
+        UserEntity counselor = userRepository.findByIdAndIsDeletedFalse(counselorId).orElseThrow(() -> 
+            new RuntimeException("Counselor not found"));
+
+        String counselorDepartment = counselor.getCollege();
+
+        // Fetch all unverified students in the same department
+        return userRepository.findByIsDeletedFalseAndIsVerifiedFalseAndRoleAndCollege(Role.student, counselorDepartment);
     }
 
     public List<UserEntity> getAllVerifiedUsers() {

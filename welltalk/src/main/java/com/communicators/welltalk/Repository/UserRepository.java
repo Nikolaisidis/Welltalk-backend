@@ -3,6 +3,7 @@ package com.communicators.welltalk.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.communicators.welltalk.Entity.Role;
 import com.communicators.welltalk.Entity.UserEntity;
 
 import java.util.List;
@@ -13,6 +14,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     List<UserEntity> findByIsDeletedFalse();
 
     List<UserEntity> findByIsDeletedFalseAndIsVerifiedFalse();
+
+    List<UserEntity> findByIsDeletedFalseAndIsVerifiedFalseAndRoleAndCollege(Role role, String college);
     
     List<UserEntity> findByIsDeletedFalseAndIsVerifiedTrue();
     
@@ -25,4 +28,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     boolean existsByIdNumber(String idNumber);
 
     UserEntity findByInstitutionalEmail(String institutionalEmail);
+
+    
 }

@@ -14,7 +14,9 @@ import com.communicators.welltalk.Repository.CounselorRepository;
 import com.communicators.welltalk.Repository.StudentRepository;
 import com.communicators.welltalk.Repository.TeacherRepository;
 import com.communicators.welltalk.Repository.UserRepository;
+import com.communicators.welltalk.dto.EmailCheckDTO;
 import com.communicators.welltalk.dto.PasswordChangeDTO;
+import com.communicators.welltalk.dto.PasswordVerificationDTO;
 
 @Service
 public class AuthenticationService {
@@ -156,6 +158,25 @@ public class AuthenticationService {
         // Save the updated user
         userRepository.save(user);
         return true;
+    }
+
+    public boolean verifyPassword(PasswordVerificationDTO request) {
+        UserEntity user;
+        if (existsByEmail(request.getEmail())) {
+            user = userRepository.findByInstitutionalEmail(request.getEmail());
+        } else {
+            throw new RuntimeException("Email does not exist: " + request.getEmail());
+        }
+
+        return passwordEncoder.matches(request.getPassword(), user.getPassword());
+    }
+
+    public boolean emailExists(String email) {
+        return userRepository.existsByInstitutionalEmail(email);
+    }
+
+    public boolean idExists(String idNumber) {
+        return userRepository.existsByIdNumber(idNumber);
     }
 
 }

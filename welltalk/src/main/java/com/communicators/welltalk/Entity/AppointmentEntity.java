@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.OneToOne;
 
 @Entity
 @Table(name = "tblappointment")
@@ -25,12 +26,17 @@ public class AppointmentEntity {
     private StudentEntity student;
 
     @ManyToOne
+
     @JoinColumn(name = "counselorId", referencedColumnName = "id")
     private CounselorEntity counselor;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "referralId", referencedColumnName = "referralId", nullable = true)
     private ReferralEntity referral;
+
+    @ManyToOne
+    @JoinColumn(name = "outsideCounselorid", referencedColumnName = "id")
+    private CounselorEntity outsideCounselor;
 
     private LocalDate appointmentDate;
 
@@ -59,7 +65,7 @@ public class AppointmentEntity {
     public AppointmentEntity(StudentEntity student, CounselorEntity counselor, LocalDate appointmentDate,
             String appointmentStartTime, String appointmentStatus,
             String appointmentNotes,
-            String appointmentType, String appointmentPurpose) {
+            String appointmentType, String appointmentPurpose, CounselorEntity outsideCounselor) {
         this.student = student;
         this.counselor = counselor;
         this.appointmentDate = appointmentDate;
@@ -69,6 +75,15 @@ public class AppointmentEntity {
         this.appointmentType = appointmentType;
         this.appointmentPurpose = appointmentPurpose;
         isDeleted = false;
+        this.outsideCounselor = outsideCounselor;
+    }
+
+    public CounselorEntity getOutsideCounselor() {
+        return outsideCounselor;
+    }
+
+    public void setOutsideCounselor(CounselorEntity outsideCounselor) {
+        this.outsideCounselor = outsideCounselor;
     }
 
     public int getAppointmentId() {
@@ -88,8 +103,9 @@ public class AppointmentEntity {
     }
 
     public CounselorEntity getCounselor() {
-        return counselor;
+        return counselor != null ? counselor : outsideCounselor;
     }
+
 
     public void setCounselor(CounselorEntity counselor) {
         this.counselor = counselor;

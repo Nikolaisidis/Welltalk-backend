@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Lob;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
@@ -62,6 +63,7 @@ public class UserEntity implements UserDetails {
     @Column(name = "college")
     private String college;
 
+    @Lob
     @Column(name = "program")
     private String program;
     

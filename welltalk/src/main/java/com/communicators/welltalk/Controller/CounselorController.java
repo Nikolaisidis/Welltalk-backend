@@ -77,4 +77,5 @@ public class CounselorController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
 }

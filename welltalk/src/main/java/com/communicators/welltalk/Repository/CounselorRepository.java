@@ -14,14 +14,11 @@ public interface CounselorRepository extends JpaRepository<CounselorEntity, Inte
 
     List<CounselorEntity> findByIsDeletedFalseAndIsVerifiedTrue();
 
+
     Optional<CounselorEntity> findByIdAndIsDeletedFalse(int id);
 
     Optional<CounselorEntity> findByInstitutionalEmailAndIsDeletedFalse(String institutionalEmail);
 
     Optional<CounselorEntity> findCounselorByInstitutionalEmailAndIsDeletedFalse(String institutionalEmail);
 
-    CounselorEntity findByProgramAndAssignedYearContainingAndCollegeAndIsDeletedFalse(
-            String program,
-            String assignedYear,
-            String college);
 }

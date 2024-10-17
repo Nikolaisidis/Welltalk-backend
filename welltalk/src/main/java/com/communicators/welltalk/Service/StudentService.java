@@ -50,10 +50,11 @@ public class StudentService {
             studentToUpdate.setBirthDate(student.getBirthDate());
             studentToUpdate.setContactNumber(student.getContactNumber());
             studentToUpdate.setPermanentAddress(student.getPermanentAddress());
-            // studentToUpdate.setBarangay(student.getBarangay());
-            // studentToUpdate.setCity(student.getCity());
-            // studentToUpdate.setProvince(student.getProvince());
-            // studentToUpdate.setZipCode(student.getZipCode());
+            studentToUpdate.setCurrentAddress(student.getCurrentAddress());
+            studentToUpdate.setParentGuardianName(student.getParentGuardianName());
+            studentToUpdate.setParentGuardianContactNumber(student.getParentGuardianContactNumber());
+            studentToUpdate.setGuardianRelationship(student.getGuardianRelationship());
+
             // Save updated student
             studentToUpdate = studentRepository.save(studentToUpdate);
 
@@ -81,6 +82,10 @@ public class StudentService {
 
     public boolean doesStudentExist(String studentId) {
         return studentRepository.existsByIdNumberAndIsDeletedFalse(studentId);
+    }
+
+    public boolean doesStudentExistByInstitutionalEmail(String institutionalEmal) {
+        return studentRepository.existsByInstitutionalEmailAndIsDeletedFalse(institutionalEmal);
     }
 
     public StudentEntity getStudentByStudentId(String studentId) {

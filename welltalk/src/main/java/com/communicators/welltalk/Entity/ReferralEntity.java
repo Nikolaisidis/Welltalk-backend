@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -24,15 +25,16 @@ public class ReferralEntity {
     private int referralId;
 
     @ManyToOne
-    @JoinColumn(name = "teacherId", referencedColumnName = "id")
-    private TeacherEntity teacher;
+    @JoinColumn(name = "referrerId", referencedColumnName = "id")
+    private UserEntity referrer;
 
     @ManyToOne
     @JoinColumn(name = "studentAccountId", referencedColumnName = "id")
     private StudentEntity student;
 
-    @OneToMany(mappedBy = "referral", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<AppointmentEntity> appointments;
+    @OneToOne
+    @JoinColumn(name = "appointmentId", referencedColumnName = "appointmentId", nullable = true)
+    private AppointmentEntity appointment;
 
     private String studentId;
 
@@ -68,12 +70,15 @@ public class ReferralEntity {
     @JoinColumn(name = "counselorId", referencedColumnName = "id")
     private CounselorEntity counselor;
 
+    private String relationship;
+
     public ReferralEntity() {
     }
 
-    public ReferralEntity(TeacherEntity teacher, String studentId, String studentEmail, String studentFirstName,
-            String studentLastName, String reason, String studentYear, String studentCollege, String studentProgram) {
-        this.teacher = teacher;
+    public ReferralEntity(UserEntity referrer, String studentId, String studentEmail, String studentFirstName,
+            String studentLastName, String reason, String studentYear, String studentCollege, String studentProgram,
+            CounselorEntity counselor, String relationship) {
+        this.referrer = referrer;
         this.studentId = studentId;
         this.studentEmail = studentEmail;
         this.studentFirstName = studentFirstName;
@@ -81,16 +86,17 @@ public class ReferralEntity {
         this.reason = reason;
         this.studentCollege = studentCollege;
         this.studentProgram = studentProgram;
-        this.status = "Pending";
         this.studentYear = studentYear;
+        this.counselor = counselor;
+        this.relationship = relationship;
     }
 
-    public List<AppointmentEntity> getAppointments() {
-        return appointments;
+    public AppointmentEntity getAppointment() {
+        return appointment;
     }
 
-    public void setAppointments(List<AppointmentEntity> appointments) {
-        this.appointments = appointments;
+    public void setAppointments(AppointmentEntity appointment) {
+        this.appointment = appointment;
     }
 
     public void setDeleted(boolean isDeleted) {
@@ -121,12 +127,12 @@ public class ReferralEntity {
         this.referralId = referralId;
     }
 
-    public TeacherEntity getTeacher() {
-        return teacher;
+    public UserEntity getReferrer() {
+        return referrer;
     }
 
-    public void setTeacher(TeacherEntity teacher) {
-        this.teacher = teacher;
+    public void setReferrer(UserEntity referrer) {
+        this.referrer = referrer;
     }
 
     public String getStudentId() {
@@ -236,6 +242,7 @@ public class ReferralEntity {
     @PrePersist
     protected void onCreate() {
         dateOfRefferal = LocalDateTime.now();
+        status = "Pending";
     }
 
     @PreUpdate
@@ -259,4 +266,11 @@ public class ReferralEntity {
         this.studentYear = studentYear;
     }
 
+    public String getRelationship() {
+        return relationship;
+    }
+
+    public void setRelationship(String relationship) {
+        this.relationship = relationship;
+    }
 }

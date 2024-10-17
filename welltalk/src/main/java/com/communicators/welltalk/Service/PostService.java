@@ -69,7 +69,7 @@ public class PostService {
         PostEntity postToUnpin = new PostEntity();
         try {
             postToUnpin = postRepository.findByPostIdAndIsDeletedFalse(id).get();
-            postToUnpin.setIsPinned(true);
+            postToUnpin.setIsPinned(false);
         } catch (Exception e) {
             throw new IllegalArgumentException("Post " + post.getPostId() + " does not exist.");
         } finally {

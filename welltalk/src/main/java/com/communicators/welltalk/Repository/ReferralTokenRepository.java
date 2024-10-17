@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface ReferralTokenRepository extends JpaRepository<ReferralTokenEntity, Integer> {
     Optional<ReferralTokenEntity> findByToken(String token);
 
+    ReferralTokenEntity findByReferral_ReferralId(int referralId);
+
 }

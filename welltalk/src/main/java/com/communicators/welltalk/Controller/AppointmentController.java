@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.communicators.welltalk.Entity.AppointmentEntity;
 import com.communicators.welltalk.Service.AppointmentService;
+import com.communicators.welltalk.Service.NotificationsService;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
@@ -28,6 +29,9 @@ public class AppointmentController {
 
     @Autowired
     private AppointmentService appointmentService;
+
+    @Autowired
+    private NotificationsService notificationsService;
 
     @GetMapping("/checkAppointmentIsTaken/{date}/{startTime}")
     public ResponseEntity<Boolean> checkAppointmentIsTaken(
@@ -50,6 +54,8 @@ public class AppointmentController {
             @RequestBody AppointmentEntity appointment) {
         AppointmentEntity newAppointment = appointmentService.counselorSaveAppointment(counselorId, studentId,
                 appointment);
+
+        notificationsService.createAppointmentByCounselorNotification(newAppointment);
         return new ResponseEntity<>(newAppointment, HttpStatus.CREATED);
     }
 
@@ -57,6 +63,8 @@ public class AppointmentController {
     public ResponseEntity<AppointmentEntity> createAppointment(@RequestParam int studentId,
             @RequestBody AppointmentEntity appointment) {
         AppointmentEntity newAppointment = appointmentService.saveAppointment(studentId, appointment);
+
+        notificationsService.createAppointmentByStudentNotification(newAppointment);
         return new ResponseEntity<>(newAppointment, HttpStatus.CREATED);
     }
 
@@ -108,14 +116,18 @@ public class AppointmentController {
     public ResponseEntity<AppointmentEntity> markAppointmentAsDone(@RequestParam int appointmentId,
             @RequestBody AppointmentEntity appointment) {
         AppointmentEntity updatedAppointment = appointmentService.markAppointmentAsDone(appointmentId,
-                appointment.getAppointmentNotes(), appointment.getAppointmentAdditionalNotes());
+                appointment);
+
+        notificationsService.markAppointmentAsDoneNotification(appointmentId);
         return new ResponseEntity<>(updatedAppointment, HttpStatus.OK);
     }
 
     @DeleteMapping("/deleteAppointment/{id}")
     public ResponseEntity<Void> deleteAppointment(@PathVariable int id) {
+        int toDelete = id;
         boolean deleted = appointmentService.deleteAppointment(id);
         if (deleted) {
+            notificationsService.cancelledAppointmentNotificationByStudent(toDelete);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -131,7 +143,6 @@ public class AppointmentController {
         return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 
-  
     @GetMapping("/getAppointmentsByDateAndCounselor")
     public ResponseEntity<?> getAppointmentsByDateAndCounselor(
             @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
@@ -140,6 +151,13 @@ public class AppointmentController {
                 HttpStatus.OK);
     }
 
-
+    @PostMapping("/saveReferralAppointment")
+    public ResponseEntity<AppointmentEntity> saveReferralAppointment(@RequestParam int referralId,
+            @RequestParam int counselorId,
+            @RequestBody AppointmentEntity appointment) {
+        AppointmentEntity newAppointment = appointmentService.saveReferralAppointment(referralId, counselorId,
+                appointment);
+        return new ResponseEntity<>(newAppointment, HttpStatus.CREATED);
+    }
 
 }

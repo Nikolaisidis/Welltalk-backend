@@ -1,6 +1,13 @@
 package com.communicators.welltalk.Entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "tblassignedCounselor")
@@ -11,14 +18,18 @@ public class AssignedCounselorEntity {
     @Column(name = "assigned_counselor_id")
     private int assignedCounselorId;
 
-    @Column(name = "student_id")
-    private int studentId;
+    @ManyToOne
+    @JoinColumn(name = "student_id", referencedColumnName = "id")
+    private StudentEntity studentId;
 
-    @Column(name = "teacher_id")
-    private int teacherId;
+    @ManyToOne
+    @JoinColumn(name = "teacher_id", referencedColumnName = "id")
+    private TeacherEntity teacherId;
 
-    @Column(name = "counselor_id")
-    private int counselorId;
+    @ManyToOne
+    @JoinColumn(name = "counselor_id", referencedColumnName = "id")
+    private CounselorEntity counselorId;
+
 
     @Column(name = "program")
     private String program;
@@ -29,37 +40,50 @@ public class AssignedCounselorEntity {
     @Column(name = "college")
     private String college;
 
-    // Getters and Setters
+    public AssignedCounselorEntity() {
+
+    }
+
+    public AssignedCounselorEntity(StudentEntity studentId, TeacherEntity teacherId, CounselorEntity counselorId,
+            CounselorEntity outsideCounselorId, String program, int year, String college) {
+        this.studentId = studentId;
+        this.teacherId = teacherId;
+        this.counselorId = counselorId;
+        this.program = program;
+        this.year = year;
+        this.college = college;
+    }
+
     public int getAssignedCounselorId() {
         return assignedCounselorId;
     }
 
-    public void setAssignedCounselorId(int assignedCounselorId) {
-        this.assignedCounselorId = assignedCounselorId;
-    }
-
-    public int getStudentId() {
+    public StudentEntity getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(int studentId) {
+    public void setStudentId(StudentEntity studentId) {
         this.studentId = studentId;
     }
 
-    public int getTeacherId() {
+    public TeacherEntity getTeacherId() {
         return teacherId;
     }
 
-    public void setTeacherId(int teacherId) {
+    public void setTeacherId(TeacherEntity teacherId) {
         this.teacherId = teacherId;
     }
 
-    public int getCounselorId() {
+    public CounselorEntity getCounselorId() {
         return counselorId;
     }
 
-    public void setCounselorId(int counselorId) {
+    public void setCounselorId(CounselorEntity counselorId) {
         this.counselorId = counselorId;
+    }
+
+    public void setAssignedCounselorId(int assignedCounselorId) {
+        this.assignedCounselorId = assignedCounselorId;
     }
 
     public String getProgram() {

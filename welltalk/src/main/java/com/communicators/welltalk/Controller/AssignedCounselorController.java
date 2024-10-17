@@ -1,7 +1,6 @@
 package com.communicators.welltalk.Controller;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.communicators.welltalk.Entity.AssignedCounselorEntity;
 import com.communicators.welltalk.Entity.CounselorEntity;
-import com.communicators.welltalk.Entity.StudentEntity;
-import com.communicators.welltalk.Entity.TeacherEntity;
 import com.communicators.welltalk.Service.AssignedCounselorService;
 
 @CrossOrigin("http://localhost:3000")
@@ -32,14 +29,10 @@ public class AssignedCounselorController {
         List<AssignedCounselorEntity> assignedCounselors = assignedCounselorService.getByCounselorId(counselorId);
         if (assignedCounselors != null && !assignedCounselors.isEmpty()) {
             List<Object> result = assignedCounselors.stream().map(assignedCounselor -> {
-                if (assignedCounselor.getStudentId() != 0) {
-                    Optional<StudentEntity> student = assignedCounselorService
-                            .getStudentById(assignedCounselor.getStudentId());
-                    return student.orElse(null);
-                } else if (assignedCounselor.getTeacherId() != 0) {
-                    Optional<TeacherEntity> teacher = assignedCounselorService
-                            .getTeacherById(assignedCounselor.getTeacherId());
-                    return teacher.orElse(null);
+                if (assignedCounselor.getStudentId() != null) {
+                    return assignedCounselor.getStudentId();
+                } else if (assignedCounselor.getTeacherId() != null) {
+                    return assignedCounselor.getTeacherId();
                 }
                 return null;
             }).collect(Collectors.toList());
@@ -54,8 +47,7 @@ public class AssignedCounselorController {
         List<AssignedCounselorEntity> assignedCounselors = assignedCounselorService.getByStudentId(studentId);
         if (assignedCounselors != null && !assignedCounselors.isEmpty()) {
             List<CounselorEntity> counselors = assignedCounselors.stream()
-                    .map(assignedCounselor -> assignedCounselorService
-                            .getCounselorById(assignedCounselor.getCounselorId()).orElse(null))
+                    .map(AssignedCounselorEntity::getCounselorId)
                     .collect(Collectors.toList());
             return new ResponseEntity<>(counselors, HttpStatus.OK);
         } else {
@@ -63,20 +55,19 @@ public class AssignedCounselorController {
         }
     }
 
-    
     @GetMapping("/getCounselorByTeacherId/{teacherId}")
     public ResponseEntity<List<CounselorEntity>> getCounselorByTeacherId(@PathVariable int teacherId) {
         List<AssignedCounselorEntity> assignedCounselors = assignedCounselorService.getByTeacherId(teacherId);
         if (assignedCounselors != null && !assignedCounselors.isEmpty()) {
             List<CounselorEntity> counselors = assignedCounselors.stream()
-                    .map(assignedCounselor -> assignedCounselorService
-                            .getCounselorById(assignedCounselor.getCounselorId()).orElse(null))
+                    .map(AssignedCounselorEntity::getCounselorId)
                     .collect(Collectors.toList());
             return new ResponseEntity<>(counselors, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
 
     @GetMapping("/getCounselorByReceiverId/{receiverId}")
     public ResponseEntity<List<CounselorEntity>> getCounselorByReceiverId(@PathVariable int receiverId) {
