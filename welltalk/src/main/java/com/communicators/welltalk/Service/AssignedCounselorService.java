@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 
 import com.communicators.welltalk.Entity.AssignedCounselorEntity;
 import com.communicators.welltalk.Entity.ChatEntity;
+import com.communicators.welltalk.Entity.ChatEntity;
 import com.communicators.welltalk.Entity.CounselorEntity;
 import com.communicators.welltalk.Entity.StudentEntity;
 import com.communicators.welltalk.Entity.TeacherEntity;
 import com.communicators.welltalk.Entity.UserEntity;
 import com.communicators.welltalk.Repository.AssignedCounselorRepository;
+import com.communicators.welltalk.Repository.ChatRepository;
 import com.communicators.welltalk.Repository.ChatRepository;
 import com.communicators.welltalk.Repository.CounselorRepository;
 import com.communicators.welltalk.Repository.StudentRepository;
@@ -52,6 +54,7 @@ public class AssignedCounselorService {
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
+
 
     public void assignCounselorIfVerified(UserEntity user) {
         if (user.getIsVerified()) {
