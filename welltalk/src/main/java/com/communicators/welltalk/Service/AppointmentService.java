@@ -332,26 +332,23 @@ public class AppointmentService {
         return appointmentRepository.save(appointmentToUpdate);
     }
 
-    public AppointmentEntity markAppointmentAsDone(int appointmentId, String notes, String additionalNotes) {
+    public AppointmentEntity markAppointmentAsDone(int appointmentId, AppointmentEntity updatedAppointment) {
         AppointmentEntity appointment = appointmentRepository.findByAppointmentIdAndIsDeletedFalse(appointmentId).get();
         appointment.setAppointmentStatus("Done");
-        appointment.setAppointmentNotes(notes);
-        appointment.setAppointmentAdditionalNotes(additionalNotes);
+        appointment.setAppointmentNotes(updatedAppointment.getAppointmentNotes());
+        appointment.setAppointmentAdditionalNotes(updatedAppointment.getAppointmentAdditionalNotes());
+        appointment.getReferral().setFeedback(updatedAppointment.getReferral().getFeedback());
 
         // add email part
-        String message = "Congratulations on completing you appointment. Feedback: " + notes + " Additional Notes: "
-                + additionalNotes;
+        String message = "Congratulations on completing you appointment. Feedback: "
+                + updatedAppointment.getAppointmentNotes();
 
         emailService.sendSimpleMessage(appointment.getStudent().getInstitutionalEmail(), "Appointment Completed",
                 message);
 
         if (appointment.getReferral() != null) {
             ReferralEntity referral = appointment.getReferral();
-            String messageToTeacher = "The student you referred has completed their appointment. Student: "
-                    + appointment.getStudent().getFirstName()
-                    + " " + appointment.getStudent().getLastName() + " Email: "
-                    + appointment.getStudent().getInstitutionalEmail() + " Feedback: " + notes + " Additional Notes: "
-                    + additionalNotes;
+            String messageToTeacher = appointment.getReferral().getFeedback();
             emailService.sendSimpleMessage(appointment.getReferral().getReferrer().getInstitutionalEmail(),
                     "Appointment Completed", messageToTeacher);
 

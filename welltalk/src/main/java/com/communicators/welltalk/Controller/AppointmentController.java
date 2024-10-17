@@ -116,7 +116,7 @@ public class AppointmentController {
     public ResponseEntity<AppointmentEntity> markAppointmentAsDone(@RequestParam int appointmentId,
             @RequestBody AppointmentEntity appointment) {
         AppointmentEntity updatedAppointment = appointmentService.markAppointmentAsDone(appointmentId,
-                appointment.getAppointmentNotes(), appointment.getAppointmentAdditionalNotes());
+                appointment);
 
         notificationsService.markAppointmentAsDoneNotification(appointmentId);
         return new ResponseEntity<>(updatedAppointment, HttpStatus.OK);
