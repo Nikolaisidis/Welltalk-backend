@@ -57,25 +57,26 @@ public class AppointmentService {
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Counselor with ID " + counselorId + " does not exist or is deleted."));
         StudentEntity student = studentService.getStudentById(studentId);
-    
-        // Check if the counselor matches the student's program, college, and assigned year
+
+        // Check if the counselor matches the student's program, college, and assigned
+        // year
         boolean isMatchingCounselor = counselor.getProgram().contains(student.getProgram()) &&
                 counselor.getCollege().equals(student.getCollege()) &&
                 counselor.getAssignedYear().contains(String.valueOf(student.getYear()));
-    
+
         // Set counselor or outside counselor based on the match
         if (isMatchingCounselor) {
             appointment.setCounselor(counselor);
         } else {
             appointment.setOutsideCounselor(counselor);
         }
-    
+
         appointment.setStudent(student);
         appointment.setAppointmentStatus("Pending");
-    
+
         // Save the appointment
         AppointmentEntity appointmentCreated = appointmentRepository.save(appointment);
-    
+
         // Prepare email message
         String emailAddress;
         if (appointmentCreated.getCounselor() != null) {
@@ -86,16 +87,15 @@ public class AppointmentService {
             // Handle case where both are null
             throw new IllegalStateException("Neither counselor nor outside counselor is set.");
         }
-    
+
         String message = "An appointment has been created for you. Date: " + appointment.getAppointmentDate()
                 + " Time: " + appointment.getAppointmentStartTime() + " Purpose: " + appointment.getAppointmentPurpose()
                 + " Type: " + appointment.getAppointmentType() + " Please wait for the counselor to assign you a time.";
-    
+
         emailService.sendSimpleMessage(emailAddress, "Appointment Created", message);
-    
+
         return appointmentCreated;
     }
-    
 
     public AppointmentEntity saveAppointment(int id, AppointmentEntity appointment) {
         StudentEntity student = studentService.getStudentById(id);
@@ -154,6 +154,7 @@ public class AppointmentService {
             studentToCreate.setIsDeleted(false);
             studentToCreate.setPassword("12345678");
             studentToCreate.setRole(Role.student);
+            studentToCreate.setYear(Integer.parseInt(referral.getStudentYear()));
 
             student = authenticationService.registerStudent(studentToCreate);
             appointment.setStudent(student);
@@ -400,12 +401,13 @@ public class AppointmentService {
         CounselorEntity counselor = counselorRepository.findByIdAndIsDeletedFalse(counselorId)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Counselor with ID " + counselorId + " does not exist or is deleted."));
-    
-        List<AppointmentEntity> appointments = appointmentRepository.findByCounselorOrOutsideCounselor(counselor, counselor);
-    
+
+        List<AppointmentEntity> appointments = appointmentRepository.findByCounselorOrOutsideCounselor(counselor,
+                counselor);
+
         appointments.sort(Comparator.comparing(AppointmentEntity::getAppointmentDate)
                 .thenComparing(AppointmentEntity::getAppointmentStartTime));
-    
+
         return appointments;
     }
 
