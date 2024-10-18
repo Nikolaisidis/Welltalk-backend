@@ -337,7 +337,6 @@ public class AppointmentService {
         appointment.setAppointmentStatus("Done");
         appointment.setAppointmentNotes(updatedAppointment.getAppointmentNotes());
         appointment.setAppointmentAdditionalNotes(updatedAppointment.getAppointmentAdditionalNotes());
-        appointment.getReferral().setFeedback(updatedAppointment.getReferral().getFeedback());
 
         // add email part
         String message = "Congratulations on completing you appointment. Feedback: "
@@ -347,13 +346,8 @@ public class AppointmentService {
                 message);
 
         if (appointment.getReferral() != null) {
-            ReferralEntity referral = appointment.getReferral();
-            String messageToTeacher = appointment.getReferral().getFeedback();
-            emailService.sendSimpleMessage(appointment.getReferral().getReferrer().getInstitutionalEmail(),
-                    "Appointment Completed", messageToTeacher);
-
-            referral.setStatus("Completed");
-            referralRepository.save(referral);
+            appointment.getReferral().setFeedback(updatedAppointment.getReferral().getFeedback());
+            appointment.getReferral().setStatus("Completed");
         }
 
         return appointmentRepository.save(appointment);
