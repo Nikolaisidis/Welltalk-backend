@@ -346,7 +346,9 @@ public class AppointmentService {
                 message);
 
         if (appointment.getReferral() != null) {
-            appointment.getReferral().setFeedback(updatedAppointment.getReferral().getFeedback());
+            if (updatedAppointment.getReferral() != null) {
+                appointment.getReferral().setFeedback(updatedAppointment.getReferral().getFeedback());
+            }
             appointment.getReferral().setStatus("Completed");
         }
 

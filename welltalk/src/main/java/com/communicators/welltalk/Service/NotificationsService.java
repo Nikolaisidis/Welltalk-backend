@@ -103,11 +103,14 @@ public class NotificationsService {
     public void markAppointmentAsDoneNotification(int appointmentID) {
         String type = "appointment_done";
         AppointmentEntity appointment = appointmentService.getAppointmentByAppointmentId(appointmentID);
-        UserEntity student = userService.getUserById(appointment.getStudent().getId());
-        UserEntity counselor = userService.getUserById(appointment.getAppointmentId());
+        // UserEntity student =
+        // userService.getUserById(appointment.getStudent().getId());
+        // UserEntity counselor =
+        // userService.getUserById(appointment.getAppointmentId());
 
         // sender = counselor, receiver = student
-        NotificationsEntity CounselorToStudent = new NotificationsEntity(type, counselor, student, appointment);
+        NotificationsEntity CounselorToStudent = new NotificationsEntity(type, appointment.getCounselor(),
+                appointment.getStudent(), appointment);
         notificationsRepository.save(CounselorToStudent);
 
         System.out.println("Appointment marked as done");
