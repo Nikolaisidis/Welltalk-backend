@@ -86,7 +86,7 @@ public class NotificationsService {
         String type = "appointment_cancelled";
         AppointmentEntity appointment = appointmentRepository.findByAppointmentId(appointmentID);
         UserEntity student = userService.getUserById(appointment.getStudent().getId());
-        UserEntity counselor = userService.getUserById(appointment.getAppointmentId());
+        UserEntity counselor = userService.getUserById(appointment.getCounselor().getId());
 
         // sender = student, receiver = student
         NotificationsEntity StudentToStudent = new NotificationsEntity(type, student, student, appointment);
