@@ -13,6 +13,7 @@ import com.communicators.welltalk.Entity.StudentEntity;
 import com.communicators.welltalk.Entity.UserEntity;
 import com.communicators.welltalk.Repository.NotificationsRepository;
 import com.communicators.welltalk.dto.NotificationsDTO;
+import com.communicators.welltalk.Repository.AppointmentRepository;
 
 @Service
 public class NotificationsService {
@@ -31,6 +32,9 @@ public class NotificationsService {
 
     @Autowired
     private AssignedCounselorService assignedCounselorService;
+
+    @Autowired
+    private AppointmentRepository appointmentRepository;
 
     // @Autowired
     // private ReferralService referralService;
@@ -80,7 +84,7 @@ public class NotificationsService {
 
     public void cancelledAppointmentNotificationByStudent(int appointmentID) {
         String type = "appointment_cancelled";
-        AppointmentEntity appointment = appointmentService.getAppointmentByAppointmentId(appointmentID);
+        AppointmentEntity appointment = appointmentRepository.findByAppointmentId(appointmentID);
         UserEntity student = userService.getUserById(appointment.getStudent().getId());
         UserEntity counselor = userService.getUserById(appointment.getAppointmentId());
 
