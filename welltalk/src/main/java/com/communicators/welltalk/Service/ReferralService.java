@@ -156,6 +156,11 @@ public class ReferralService {
         referral.setStatus("Responded");
         referralRepository.save(referral);
         referralTokenService.deleteReferralToken(referralTokenEntity);
+
+        // update referrer
+        String subject = "Referral Accepted by Referred Student";
+        String message = "Your referral has been accepted by the referred student.";
+        emailTemplates.updateToReferrer(subject, message, referral);
         return referral;
     }
 

@@ -52,6 +52,9 @@ public class AppointmentService {
     @Autowired
     UserService userService;
 
+    @Autowired
+    EmailTemplates emailTemplates;
+
     public AppointmentEntity counselorSaveAppointment(int counselorId, int studentId, AppointmentEntity appointment) {
         CounselorEntity counselor = counselorRepository.findByIdAndIsDeletedFalse(counselorId)
                 .orElseThrow(() -> new IllegalArgumentException(
@@ -93,6 +96,7 @@ public class AppointmentService {
                 + " Type: " + appointment.getAppointmentType() + " Please wait for the counselor to assign you a time.";
 
         emailService.sendSimpleMessage(emailAddress, "Appointment Created", message);
+        emailTemplates.studentCreateAppointment(appointmentCreated);
 
         return appointmentCreated;
     }
@@ -114,12 +118,7 @@ public class AppointmentService {
 
         AppointmentEntity appointmentCreated = appointmentRepository.save(appointment);
 
-        String message = "An appointment has been created for you. Date: " + appointment.getAppointmentDate()
-                + " Time: " + appointment.getAppointmentStartTime() + " Purpose: " + appointment.getAppointmentPurpose()
-                + " Type: " + appointment.getAppointmentType() + " Please wait for the counselor to assign you a time.";
-
-        emailService.sendSimpleMessage(appointmentCreated.getStudent().getInstitutionalEmail(), "Appointment Created",
-                message);
+        emailTemplates.studentCreateAppointment(appointmentCreated);
 
         return appointmentCreated;
     }
@@ -137,12 +136,17 @@ public class AppointmentService {
 
         StudentEntity student;
 
+        appointment.setAppointmentStatus("Pending");
+        appointment.setCounselor(counselorService.getCounselorById(counselorId));
+
         if (studentService.doesStudentExist(referral.getStudentId())) {
             student = studentService.getStudentByStudentId(referral.getStudentId());
             appointment.setStudent(student);
+            emailTemplates.studentCreateAppointment(appointment);
         } else if (studentService.doesStudentExistByInstitutionalEmail(referral.getStudentEmail())) {
             student = studentService.getStudentByInstitutionalEmail(referral.getStudentEmail());
             appointment.setStudent(student);
+            emailTemplates.studentCreateAppointment(appointment);
         } else {
             StudentEntity studentToCreate = new StudentEntity();
             studentToCreate.setIdNumber(referral.getStudentId());
@@ -159,10 +163,8 @@ public class AppointmentService {
             student = authenticationService.registerStudent(studentToCreate);
             appointment.setStudent(student);
             userService.verifyUserAccount(student.getId());
+            emailTemplates.referralCreateAccountAppointment(appointment);
         }
-
-        appointment.setAppointmentStatus("Pending");
-        appointment.setCounselor(counselorService.getCounselorById(counselorId));
 
         // // Assign available counselor based on assigned counselor service
         // List<AssignedCounselorEntity> assignedCounselors = assignedCounselorService
@@ -177,9 +179,17 @@ public class AppointmentService {
         // timeslot.");
         // }
         // //
-        appointment.getReferral().setStatus("Accepted");
+        appointment.getReferral().setStatus("Appointment Created");
 
         AppointmentEntity appointmentCreated = appointmentRepository.save(appointment);
+
+        // email student
+        emailTemplates.studentCreateAppointment(appointmentCreated);
+
+        // email referrer
+        String subject = "Appointment Created for Referred Student";
+        String message = "An appointment has been created for the student you referred.";
+        emailTemplates.updateToReferrer(subject, message, referral);
 
         return appointmentCreated;
     }
