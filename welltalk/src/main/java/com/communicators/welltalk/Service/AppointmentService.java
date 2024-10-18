@@ -159,6 +159,8 @@ public class AppointmentService {
             studentToCreate.setPassword("12345678");
             studentToCreate.setRole(Role.student);
             studentToCreate.setYear(Integer.parseInt(referral.getStudentYear()));
+            studentToCreate.setImage("https://ui-avatars.com/api/?name=" + referral.getStudentFirstName() + "+"
+                    + referral.getStudentLastName());
 
             student = authenticationService.registerStudent(studentToCreate);
             appointment.setStudent(student);
