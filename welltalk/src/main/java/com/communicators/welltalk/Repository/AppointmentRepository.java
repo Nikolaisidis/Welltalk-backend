@@ -17,6 +17,8 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
 
     Optional<AppointmentEntity> findByAppointmentIdAndIsDeletedFalse(int id);
 
+    AppointmentEntity findByAppointmentId(int id);
+
     List<AppointmentEntity> findByAppointmentDateAndIsDeletedFalse(LocalDate date);
 
     List<AppointmentEntity> findByStudent(StudentEntity student);
@@ -28,8 +30,10 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
 
     List<AppointmentEntity> findByCounselor(CounselorEntity counselor);
 
-    List<AppointmentEntity> findByCounselorAndAppointmentDateAndIsDeletedFalse(CounselorEntity counselor, LocalDate date);
+    List<AppointmentEntity> findByCounselorAndAppointmentDateAndIsDeletedFalse(CounselorEntity counselor,
+            LocalDate date);
 
-    List<AppointmentEntity> findByCounselorOrOutsideCounselor(CounselorEntity counselor, CounselorEntity outsideCounselor);
+    List<AppointmentEntity> findByCounselorOrOutsideCounselor(CounselorEntity counselor,
+            CounselorEntity outsideCounselor);
 
 }
