@@ -13,27 +13,30 @@ import java.util.Optional;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<AppointmentEntity, Integer> {
-    List<AppointmentEntity> findByIsDeletedFalse(Sort sort);
+        List<AppointmentEntity> findByIsDeletedFalse(Sort sort);
 
-    Optional<AppointmentEntity> findByAppointmentIdAndIsDeletedFalse(int id);
+        Optional<AppointmentEntity> findByAppointmentIdAndIsDeletedFalse(int id);
 
-    AppointmentEntity findByAppointmentId(int id);
+        AppointmentEntity findByAppointmentId(int id);
 
-    List<AppointmentEntity> findByAppointmentDateAndIsDeletedFalse(LocalDate date);
+        List<AppointmentEntity> findByAppointmentDateAndIsDeletedFalse(LocalDate date);
 
-    List<AppointmentEntity> findByStudent(StudentEntity student);
+        List<AppointmentEntity> findByStudent(StudentEntity student);
 
-    Boolean existsByAppointmentDateAndAppointmentStartTimeAndIsDeletedFalse(LocalDate date, String startTime);
+        Boolean existsByAppointmentDateAndAppointmentStartTimeAndIsDeletedFalse(LocalDate date, String startTime);
 
-    List<AppointmentEntity> findByCounselorAndAppointmentDateAndAppointmentStartTimeAndIsDeletedFalse(
-            CounselorEntity counselor, LocalDate date, String startTime);
+        List<AppointmentEntity> findByCounselorAndAppointmentDateAndAppointmentStartTimeAndIsDeletedFalse(
+                        CounselorEntity counselor, LocalDate date, String startTime);
 
-    List<AppointmentEntity> findByCounselor(CounselorEntity counselor);
+        List<AppointmentEntity> findByCounselor(CounselorEntity counselor);
 
-    List<AppointmentEntity> findByCounselorAndAppointmentDateAndIsDeletedFalse(CounselorEntity counselor,
-            LocalDate date);
+        List<AppointmentEntity> findByCounselorAndAppointmentDateAndIsDeletedFalse(CounselorEntity counselor,
+                        LocalDate date);
 
-    List<AppointmentEntity> findByCounselorOrOutsideCounselor(CounselorEntity counselor,
-            CounselorEntity outsideCounselor);
+        List<AppointmentEntity> findByCounselorOrOutsideCounselor(CounselorEntity counselor,
+                        CounselorEntity outsideCounselor);
+
+        boolean existsByCounselorAndAppointmentDateAndAppointmentStartTimeAndIsDeletedFalse(CounselorEntity counselor,
+                        LocalDate date, String startTime);
 
 }

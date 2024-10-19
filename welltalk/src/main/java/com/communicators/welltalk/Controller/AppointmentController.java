@@ -151,6 +151,14 @@ public class AppointmentController {
                 HttpStatus.OK);
     }
 
+    @GetMapping("/checkCounselorAppointmentIsTaken")
+    public ResponseEntity<Boolean> checkCounselorAppointmentIsTaken(
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam("startTime") String startTime, @RequestParam("counselorId") int counselorId) {
+        boolean isTaken = appointmentService.checkCounselorAppointmentIsTaken(date, startTime, counselorId);
+        return new ResponseEntity<>(isTaken, HttpStatus.OK);
+    }
+
     @PostMapping("/saveReferralAppointment")
     public ResponseEntity<AppointmentEntity> saveReferralAppointment(@RequestParam int referralId,
             @RequestParam int counselorId,

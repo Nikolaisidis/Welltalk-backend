@@ -416,6 +416,13 @@ public class AppointmentService {
         return appointments;
     }
 
+    public boolean checkCounselorAppointmentIsTaken(LocalDate date, String startTime, int counselorId) {
+        CounselorEntity counselor = counselorService.getCounselorById(counselorId);
+        return appointmentRepository.existsByCounselorAndAppointmentDateAndAppointmentStartTimeAndIsDeletedFalse(
+                counselor,
+                date, startTime);
+    }
+
     public AppointmentEntity rescheduleAppointment(int appointmentId, LocalDate date, String startTime) {
         AppointmentEntity appointment = appointmentRepository.findByAppointmentIdAndIsDeletedFalse(appointmentId).get();
         appointment.setAppointmentDate(date);
