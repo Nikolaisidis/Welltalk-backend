@@ -30,6 +30,7 @@ import com.communicators.welltalk.dto.EmailCheckDTO;
 import com.communicators.welltalk.dto.IdNumberCheckDTO;
 import com.communicators.welltalk.dto.PasswordChangeDTO;
 import com.communicators.welltalk.dto.PasswordVerificationDTO;
+import com.communicators.welltalk.dto.UserResponseDTO;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
@@ -122,8 +123,8 @@ public class UserController {
     }
 
     @GetMapping("/getAllUnverifiedUsers")
-    public ResponseEntity<List<UserEntity>> getAllUnverifiedUsers() {
-        List<UserEntity> users = userService.getAllUnverifiedUsers();
+    public ResponseEntity<List<UserResponseDTO>> getAllUnverifiedUsers() {
+        List<UserResponseDTO> users = userService.getAllUnverifiedUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
