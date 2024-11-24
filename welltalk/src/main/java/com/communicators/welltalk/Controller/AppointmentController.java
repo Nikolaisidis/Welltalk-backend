@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.communicators.welltalk.Entity.AppointmentEntity;
 import com.communicators.welltalk.Service.AppointmentService;
 import com.communicators.welltalk.Service.NotificationsService;
+import com.communicators.welltalk.dto.AppointmentResponseDTO;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
@@ -75,9 +76,16 @@ public class AppointmentController {
         return new ResponseEntity<>(updatedAppointment, HttpStatus.OK);
     }
 
+    // TO NOTE: This method is temporarily commented to test APPOINTMENT DTO
+    // @GetMapping("/getAllAppointments")
+    // public ResponseEntity<?> getAllAppointments() {
+    //     return new ResponseEntity<>(appointmentService.getAllAppointments(), HttpStatus.OK);
+    // }
+
     @GetMapping("/getAllAppointments")
-    public ResponseEntity<?> getAllAppointments() {
-        return new ResponseEntity<>(appointmentService.getAllAppointments(), HttpStatus.OK);
+    public ResponseEntity<List<AppointmentResponseDTO>> getAllAppointments() {
+        List<AppointmentResponseDTO> appointments = appointmentService.getAllAppointments();
+        return ResponseEntity.ok(appointments);
     }
 
     @GetMapping("/getAppointmentById/{id}")

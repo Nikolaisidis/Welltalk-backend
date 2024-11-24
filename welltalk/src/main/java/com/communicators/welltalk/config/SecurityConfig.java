@@ -50,7 +50,7 @@ public class SecurityConfig {
                                         "/forgotPassword/**", "/validateChangePasswordToken/**", "/ws/**",
                                         "/sendEmail/**", "/websocket/**", "/hello.html", "/static/**",
                                         "/user/referral/acceptReferral/**", "/user/referral/rejectReferral/**",
-                                        "/checkEmail/**","/checkIdNumber/**")
+                                        "/checkEmail/**","/checkIdNumber/**", "/me/**")
                                 .permitAll()
                                 .anyRequest().authenticated())
                 .userDetailsService(userService)

@@ -65,8 +65,25 @@ public class UserService implements UserDetailsService {
         return userRepository.findByIsDeletedFalseAndIsVerifiedFalseAndRoleAndCollege(Role.student, counselorDepartment);
     }
 
-    public List<UserEntity> getAllVerifiedUsers() {
-        return userRepository.findByIsDeletedFalseAndIsVerifiedTrue();
+    public List<UserResponseDTO> getAllVerifiedUsers() {
+        
+        List<UserEntity> users = userRepository.findByIsDeletedFalseAndIsVerifiedTrue();
+        List<UserResponseDTO> userDTOs = new ArrayList<>();
+
+        for (UserEntity user : users) {
+            UserResponseDTO dto = new UserResponseDTO();
+            dto.setId(user.getId());
+            dto.setInstitutionalEmail(user.getInstitutionalEmail());
+            dto.setFirstName(user.getFirstName());
+            dto.setLastName(user.getLastName());
+            dto.setImage(user.getImage());
+            dto.setRole(user.getRole());
+            dto.setIdNumber(user.getIdNumber());
+            
+            userDTOs.add(dto);
+        }
+
+        return userDTOs;
     }
 
     public boolean existsByEmail(String institutionalEmail) {

@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -57,6 +58,17 @@ public class UserController {
 
     public UserController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserEntity> getCurrentUser(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String email = authentication.getName(); // Get email from Authentication
+        UserEntity userResponse = authenticationService.getCurrentUserDetails(email);
+        return ResponseEntity.ok(userResponse);
     }
 
     @PostMapping("/createUser")
@@ -135,8 +147,8 @@ public class UserController {
     }
 
     @GetMapping("/getAllVerifiedUsers")
-    public ResponseEntity<List<UserEntity>> getAllVerifiedUsers() {
-        List<UserEntity> users = userService.getAllVerifiedUsers();
+    public ResponseEntity<List<UserResponseDTO>> getAllVerifiedUsers() {
+        List<UserResponseDTO> users = userService.getAllVerifiedUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
