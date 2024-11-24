@@ -203,7 +203,7 @@ public class NotificationsService {
         String type = "post";
         UserEntity counselor = userService.getUserById(counselorId);
 
-        List<StudentEntity> students = studentService.getAllStudents();
+        List<StudentEntity> students = studentService.getAllPrivateStudents();
         for (StudentEntity student : students) {
             NotificationsEntity notification = new NotificationsEntity(type, counselor, student, post);
             notificationsRepository.save(notification);

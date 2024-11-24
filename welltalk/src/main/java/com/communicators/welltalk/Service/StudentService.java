@@ -1,12 +1,16 @@
 package com.communicators.welltalk.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.communicators.welltalk.Entity.CounselorEntity;
 import com.communicators.welltalk.Entity.StudentEntity;
+import com.communicators.welltalk.Entity.UserEntity;
 import com.communicators.welltalk.Repository.StudentRepository;
+import com.communicators.welltalk.dto.StudentResponseDTO;
 
 @Service
 public class StudentService {
@@ -20,7 +24,37 @@ public class StudentService {
     @Autowired
     AssignedCounselorService assignedCounselorService;
 
-    public List<StudentEntity> getAllStudents() {
+    public List<StudentResponseDTO> getAllStudents() {
+        List<StudentEntity> students = studentRepository.findByIsDeletedFalseAndIsVerifiedTrue();
+        List<StudentResponseDTO> studentDTOs = new ArrayList<>();
+
+        for (StudentEntity student : students) {
+            StudentResponseDTO dto = new StudentResponseDTO();
+            dto.setId(student.getId());
+            dto.setInstitutionalEmail(student.getInstitutionalEmail());
+            dto.setFirstName(student.getFirstName());
+            dto.setLastName(student.getLastName());
+            dto.setImage(student.getImage());
+            dto.setRole(student.getRole());
+            dto.setIdNumber(student.getIdNumber());
+            dto.setCollege(student.getCollege());
+            dto.setProgram(student.getProgram());
+            dto.setYear(student.getYear());
+            dto.setBirthDate(student.getBirthDate());
+            dto.setContactNumber(student.getContactNumber());
+            dto.setPermanentAddress(student.getPermanentAddress());
+            dto.setCurrentAddress(student.getCurrentAddress());
+            dto.setParentGuardianName(student.getParentGuardianName());
+            dto.setParentGuardianContactNumber(student.getParentGuardianContactNumber());
+            dto.setGuardianRelationship(student.getGuardianRelationship());
+
+            studentDTOs.add(dto);
+        }
+        return studentDTOs;
+    }
+
+    // Returns all students without DTO filtering
+    public List<StudentEntity> getAllPrivateStudents() {
         return studentRepository.findByIsDeletedFalseAndIsVerifiedTrue();
     }
 

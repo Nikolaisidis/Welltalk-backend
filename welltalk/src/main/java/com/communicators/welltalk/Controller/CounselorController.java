@@ -19,6 +19,7 @@ import com.communicators.welltalk.Entity.CounselorEntity;
 import com.communicators.welltalk.Service.AssignedCounselorService;
 import com.communicators.welltalk.Service.AuthenticationService;
 import com.communicators.welltalk.Service.CounselorService;
+import com.communicators.welltalk.dto.CounselorResponseDTO;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
@@ -42,8 +43,8 @@ public class CounselorController {
     }
 
     @GetMapping("/getAllCounselors")
-    public ResponseEntity<List<CounselorEntity>> getAllCounselors() {
-        List<CounselorEntity> counselors = counselorService.getAllCounselors();
+    public ResponseEntity<List<CounselorResponseDTO>> getAllCounselors() {
+        List<CounselorResponseDTO> counselors = counselorService.getAllCounselors();
         return new ResponseEntity<>(counselors, HttpStatus.OK);
     }
 
