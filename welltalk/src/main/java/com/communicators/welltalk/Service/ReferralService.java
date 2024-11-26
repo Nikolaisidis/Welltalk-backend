@@ -97,6 +97,7 @@ public class ReferralService {
         ReferralEntity newReferral = referralRepository.save(referral);
 
         String token = UUID.randomUUID().toString();
+        System.out.println("Token: " + token);
         referralTokenService.createReferralTokenForUser(newReferral, token);
 
         emailTemplates.sendReferralInvitation(newReferral, token);

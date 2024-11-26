@@ -1,15 +1,15 @@
 package com.communicators.welltalk.Service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.communicators.welltalk.Repository.ReferralTokenRepository;
-import com.communicators.welltalk.Entity.ReferralEntity;
-import com.communicators.welltalk.Entity.ReferralTokenEntity;
-
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.communicators.welltalk.Entity.ReferralEntity;
+import com.communicators.welltalk.Entity.ReferralTokenEntity;
+import com.communicators.welltalk.Repository.ReferralTokenRepository;
 
 @Service
 public class ReferralTokenService {
@@ -21,6 +21,7 @@ public class ReferralTokenService {
         myToken.setReferral(referral);
         myToken.setToken(token);
         myToken.setExpiryDate(calculateExpiryDate(60 * 24 * 15)); // Token expires in 30 days
+        System.out.println("Token: " + myToken.getToken());
         referralTokenRepository.save(myToken);
     }
 
