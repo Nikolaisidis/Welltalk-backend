@@ -3,6 +3,9 @@ package com.communicators.welltalk.Controller;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -123,9 +126,25 @@ public class UserController {
         return ResponseEntity.ok("Password changed successfully.");
     }
 
+    // @PostMapping("/login")
+    // public ResponseEntity<AuthenticationResponse> login(@RequestBody UserEntity request) {
+    //     return ResponseEntity.ok(authenticationService.authenticate(request));
+    // }
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody UserEntity request) {
-        return ResponseEntity.ok(authenticationService.authenticate(request));
+    public ResponseEntity<?> login(@RequestBody UserEntity request, HttpServletResponse response) {
+        // Authenticate the user and generate the JWT token
+        AuthenticationResponse authResponse = authenticationService.authenticate(request);
+
+        // Create an HttpOnly cookie with the token
+        Cookie cookie = new Cookie("token", authResponse.getToken());
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true); // Set to true in production (requires HTTPS)
+        cookie.setPath("/"); // Cookie accessible across the application
+        cookie.setMaxAge(120); // Expires in 2 minutes
+        response.addCookie(cookie);
+
+        // Optionally, return user details or a success message
+        return ResponseEntity.ok(authResponse);
     }
 
     @GetMapping("/getAllUsers")

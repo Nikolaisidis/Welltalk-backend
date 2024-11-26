@@ -61,12 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
 
                 // Set HttpOnly cookie
-                Cookie cookie = new Cookie("token", token);
-                cookie.setHttpOnly(true);
-                cookie.setSecure(true); // Ensure this is set if using HTTPS
-                cookie.setPath("/");
-                cookie.setMaxAge(36000);
-                response.addCookie(cookie);
+                
 
                 // System.out.println("Cookie set: " + cookie.getName() + ", HttpOnly: " +
                 // cookie.isHttpOnly()
