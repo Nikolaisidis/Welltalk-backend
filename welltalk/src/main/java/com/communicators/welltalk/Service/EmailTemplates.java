@@ -12,7 +12,7 @@ public class EmailTemplates {
     @Autowired
     private EmailService emailService;
 
-    private String base_link = "http://localhost:3000/";
+    private String base_link = " https://well-talk-ten.vercel.app/";
 
     // email account has been verified
     public String sendVerificationEmail(String to) {

@@ -94,7 +94,8 @@ public class UserController {
         String token = UUID.randomUUID().toString();
         passwordReset.createPasswordResetTokenForUser(user, token);
 
-        String message = "Here is the link to reset your password: http://localhost:3000/" + token + "/changepassword";
+        String message = "Here is the link to reset your password: https://well-talk-ten.vercel.app/" + token
+                + "/changepassword";
 
         emailService.sendSimpleMessage(
                 email,
@@ -184,18 +185,17 @@ public class UserController {
             // isVerified -> true
 
             // notification.service (userid)
-                // user -> fetch user by user Id
-                // assignedCounselor - fetch counselor by user Id
+            // user -> fetch user by user Id
+            // assignedCounselor - fetch counselor by user Id
 
-                // if user.role == student && user.isVerified == 1
-            
-                    // notification 
-                        // type - verified_student
-                        // sender - assignedCounselor
-                        // receiver - assignedCounselor
-                        // user - user
-            
-            
+            // if user.role == student && user.isVerified == 1
+
+            // notification
+            // type - verified_student
+            // sender - assignedCounselor
+            // receiver - assignedCounselor
+            // user - user
+
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
