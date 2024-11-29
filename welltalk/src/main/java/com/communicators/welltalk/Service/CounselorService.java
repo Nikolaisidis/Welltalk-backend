@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.communicators.welltalk.Entity.CounselorEntity;
 import com.communicators.welltalk.Repository.AssignedCounselorRepository;
 import com.communicators.welltalk.Repository.CounselorRepository;
+import com.communicators.welltalk.dto.CounselorResponseDTO;
 
 @Service
 public class CounselorService {
@@ -29,8 +30,26 @@ public class CounselorService {
         return savedCounselor;
     }
 
-    public List<CounselorEntity> getAllCounselors() {
-        return counselorRepository.findByIsDeletedFalseAndIsVerifiedTrue();
+    public List<CounselorResponseDTO> getAllCounselors() {
+        List<CounselorEntity> counselors = counselorRepository.findByIsDeletedFalseAndIsVerifiedTrue();
+        List<CounselorResponseDTO> counselorDTOs = new ArrayList<>();
+        
+        for (CounselorEntity counselor : counselors) {
+            CounselorResponseDTO dto = new CounselorResponseDTO();
+            dto.setId(counselor.getId());
+            dto.setInstitutionalEmail(counselor.getInstitutionalEmail());
+            dto.setFirstName(counselor.getFirstName());
+            dto.setLastName(counselor.getLastName());
+            dto.setImage(counselor.getImage());
+            dto.setProgram(counselor.getProgram());
+            dto.setCollege(counselor.getCollege());
+            dto.setAssignedYear(counselor.getAssignedYear());
+            dto.setRole(counselor.getRole());
+            dto.setIdNumber(counselor.getIdNumber());
+            
+            counselorDTOs.add(dto);
+        }
+        return counselorDTOs;
     }
 
     public CounselorEntity getCounselorById(int id) {

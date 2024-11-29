@@ -1,5 +1,6 @@
 package com.communicators.welltalk.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +9,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.communicators.welltalk.Entity.CounselorEntity;
 import com.communicators.welltalk.Entity.Role;
 import com.communicators.welltalk.Entity.UserEntity;
 import com.communicators.welltalk.Repository.UserRepository;
+import com.communicators.welltalk.dto.UserResponseDTO;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -28,9 +31,30 @@ public class UserService implements UserDetailsService {
         return userRepository.findByIsDeletedFalse();
     }
 
-    public List<UserEntity> getAllUnverifiedUsers() {
-        return userRepository.findByIsDeletedFalseAndIsVerifiedFalse();
+    // !!! TO BE FIXED !!!
+    // public List<UserEntity> getAllUnverifiedUsers() {
+    //     return userRepository.findByIsDeletedFalseAndIsVerifiedFalse();
+    // }
+
+    public List<UserResponseDTO> getAllUnverifiedUsers() {
+        List<UserEntity> users = userRepository.findByIsDeletedFalseAndIsVerifiedFalse();
+        List<UserResponseDTO> userDTOs = new ArrayList<>();
+
+        for (UserEntity user : users) {
+            UserResponseDTO dto = new UserResponseDTO();
+            dto.setId(user.getId());
+            dto.setInstitutionalEmail(user.getInstitutionalEmail());
+            dto.setFirstName(user.getFirstName());
+            dto.setLastName(user.getLastName());
+            dto.setImage(user.getImage());
+            dto.setRole(user.getRole());
+            dto.setIdNumber(user.getIdNumber());
+            
+            userDTOs.add(dto);
+        }
+        return userDTOs;
     }
+
 
     public List<UserEntity> getAllUnverifiedStudents(int counselorId) {
         UserEntity counselor = userRepository.findByIdAndIsDeletedFalse(counselorId).orElseThrow(() -> 
@@ -38,12 +62,28 @@ public class UserService implements UserDetailsService {
 
         String counselorDepartment = counselor.getCollege();
 
-        // Fetch all unverified students in the same department
         return userRepository.findByIsDeletedFalseAndIsVerifiedFalseAndRoleAndCollege(Role.student, counselorDepartment);
     }
 
-    public List<UserEntity> getAllVerifiedUsers() {
-        return userRepository.findByIsDeletedFalseAndIsVerifiedTrue();
+    public List<UserResponseDTO> getAllVerifiedUsers() {
+        
+        List<UserEntity> users = userRepository.findByIsDeletedFalseAndIsVerifiedTrue();
+        List<UserResponseDTO> userDTOs = new ArrayList<>();
+
+        for (UserEntity user : users) {
+            UserResponseDTO dto = new UserResponseDTO();
+            dto.setId(user.getId());
+            dto.setInstitutionalEmail(user.getInstitutionalEmail());
+            dto.setFirstName(user.getFirstName());
+            dto.setLastName(user.getLastName());
+            dto.setImage(user.getImage());
+            dto.setRole(user.getRole());
+            dto.setIdNumber(user.getIdNumber());
+            
+            userDTOs.add(dto);
+        }
+
+        return userDTOs;
     }
 
     public boolean existsByEmail(String institutionalEmail) {

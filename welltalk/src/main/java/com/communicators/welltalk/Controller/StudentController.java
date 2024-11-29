@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.communicators.welltalk.Entity.StudentEntity;
 import com.communicators.welltalk.Service.AuthenticationService;
 import com.communicators.welltalk.Service.StudentService;
+import com.communicators.welltalk.dto.StudentResponseDTO;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
@@ -34,8 +35,8 @@ public class StudentController {
     private AuthenticationService authenticationService;
 
     @GetMapping("/getAllStudents")
-    public ResponseEntity<List<StudentEntity>> getAllStudents() {
-        List<StudentEntity> students = studentService.getAllStudents();
+    public ResponseEntity<List<StudentResponseDTO>> getAllStudents() {
+        List<StudentResponseDTO> students = studentService.getAllStudents();
         return new ResponseEntity<>(students, HttpStatus.OK);
     }
 

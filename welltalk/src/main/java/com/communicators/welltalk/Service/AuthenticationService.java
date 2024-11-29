@@ -178,5 +178,17 @@ public class AuthenticationService {
     public boolean idExists(String idNumber) {
         return userRepository.existsByIdNumber(idNumber);
     }
+    
+    public UserEntity getCurrentUser(String email) {
+        return userRepository.findByInstitutionalEmail(email);
+    }
+
+    public UserEntity getCurrentUserDetails(String email) {
+        UserEntity user = getCurrentUser(email);
+        if (user == null) {
+            throw new RuntimeException("User not found with email: " + email);
+        }
+        return user; 
+    }
 
 }

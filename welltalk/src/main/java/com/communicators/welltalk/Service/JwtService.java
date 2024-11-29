@@ -75,4 +75,8 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
 
     }
+
+    public String extractEmail(String token) {
+        return extractClaim(token, Claims::getSubject); // Assumes email is stored as the subject
+    }
 }

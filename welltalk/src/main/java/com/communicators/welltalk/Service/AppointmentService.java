@@ -3,11 +3,12 @@ package com.communicators.welltalk.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import org.apache.tomcat.jni.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ import com.communicators.welltalk.Entity.StudentEntity;
 import com.communicators.welltalk.Repository.AppointmentRepository;
 import com.communicators.welltalk.Repository.CounselorRepository;
 import com.communicators.welltalk.Repository.ReferralRepository;
+import com.communicators.welltalk.dto.AppointmentResponseDTO;
+import com.communicators.welltalk.dto.CounselorResponseDTO;
+import com.communicators.welltalk.dto.StudentResponseDTO;
 
 @Service
 public class AppointmentService {
@@ -117,7 +121,6 @@ public class AppointmentService {
         }
 
         AppointmentEntity appointmentCreated = appointmentRepository.save(appointment);
-
         emailTemplates.studentCreateAppointment(appointmentCreated);
 
         return appointmentCreated;
@@ -289,13 +292,109 @@ public class AppointmentService {
         return appointments;
     }
 
+public List<AppointmentEntity> getAppointmentsByDateAndAssignedCounselors(LocalDate date, int studentId) {
+    List<AssignedCounselorEntity> assignedCounselors = assignedCounselorService.getByStudentId(studentId);
+    List<AppointmentEntity> appointments = new ArrayList<>();
+
+    for (AssignedCounselorEntity assignedCounselor : assignedCounselors) {
+        CounselorEntity counselor = assignedCounselor.getCounselorId();
+        if (counselor != null) {
+            List<AppointmentEntity> counselorAppointments = appointmentRepository
+                    .findByCounselorAndAppointmentDateAndIsDeletedFalse(counselor, date);
+            if (counselorAppointments.isEmpty()) {
+                // Add a placeholder to indicate the counselor is available
+                AppointmentEntity placeholderAppointment = new AppointmentEntity();
+                placeholderAppointment.setCounselor(counselor);
+                placeholderAppointment.setAppointmentDate(date);
+                placeholderAppointment.setAppointmentStartTime("00:00"); 
+                placeholderAppointment.setAppointmentStatus("Available");
+                appointments.add(placeholderAppointment);
+            } else {
+                appointments.addAll(counselorAppointments);
+            }
+        }
+    }
+
+    return appointments;
+}
+
     public boolean checkAppointmentIsTaken(LocalDate date, String startTime) {
         return appointmentRepository.existsByAppointmentDateAndAppointmentStartTimeAndIsDeletedFalse(date, startTime);
     }
 
-    public List<AppointmentEntity> getAllAppointments() {
+    // TO NOTE: This method is temporarily commented out to TEST Appointment DTO
+    // public List<AppointmentEntity> getAllAppointments() {
+    // Sort sort = Sort.by(Sort.Direction.ASC, "appointmentDate",
+    // "appointmentStartTime");
+    // return appointmentRepository.findByIsDeletedFalse(sort);
+    // }
+
+    private StudentResponseDTO convertStudentToDTO(StudentEntity student) {
+        if (student == null)
+            return null;
+        StudentResponseDTO dto = new StudentResponseDTO();
+        dto.setId(student.getId());
+        dto.setInstitutionalEmail(student.getInstitutionalEmail());
+        dto.setFirstName(student.getFirstName());
+        dto.setLastName(student.getLastName());
+        dto.setImage(student.getImage());
+        dto.setBirthDate(student.getBirthDate());
+        dto.setGender(student.getGender());
+        dto.setCollege(student.getCollege());
+        dto.setProgram(student.getProgram());
+        dto.setYear(student.getYear());
+        dto.setContactNumber(student.getContactNumber());
+        dto.setParentGuardianContactNumber(student.getParentGuardianContactNumber());
+        dto.setParentGuardianName(student.getParentGuardianName());
+        dto.setCurrentAddress(student.getCurrentAddress());
+        dto.setGuardianRelationship(student.getGuardianRelationship());
+        dto.setPermanentAddress(student.getPermanentAddress());
+
+        return dto;
+    }
+
+    private CounselorResponseDTO convertCounselorToDTO(CounselorEntity counselor) {
+        if (counselor == null)
+            return null;
+        CounselorResponseDTO dto = new CounselorResponseDTO();
+        dto.setId(counselor.getId());
+        dto.setInstitutionalEmail(counselor.getInstitutionalEmail());
+        dto.setFirstName(counselor.getFirstName());
+        dto.setLastName(counselor.getLastName());
+        dto.setImage(counselor.getImage());
+        dto.setCollege(counselor.getCollege());
+        dto.setProgram(counselor.getProgram());
+        dto.setAssignedYear(counselor.getAssignedYear());
+        dto.setIdNumber(counselor.getIdNumber());
+
+        return dto;
+    }
+
+    private AppointmentResponseDTO convertToDTO(AppointmentEntity appointment) {
+        AppointmentResponseDTO dto = new AppointmentResponseDTO();
+        dto.setAppointmentId(appointment.getAppointmentId());
+        dto.setAppointmentDate(appointment.getAppointmentDate());
+        dto.setAppointmentStartTime(appointment.getAppointmentStartTime());
+        dto.setAppointmentStatus(appointment.getAppointmentStatus());
+        dto.setAppointmentType(appointment.getAppointmentType());
+        dto.setAppointmentPurpose(appointment.getAppointmentPurpose());
+        dto.setAppointmentAdditionalNotes(appointment.getAppointmentAdditionalNotes());
+
+        // Map nested Student and Counselor
+        dto.setStudent(convertStudentToDTO(appointment.getStudent()));
+        dto.setCounselor(convertCounselorToDTO(appointment.getCounselor()));
+
+        return dto;
+    }
+
+    public List<AppointmentResponseDTO> getAllAppointments() {
         Sort sort = Sort.by(Sort.Direction.ASC, "appointmentDate", "appointmentStartTime");
-        return appointmentRepository.findByIsDeletedFalse(sort);
+        List<AppointmentEntity> appointments = appointmentRepository.findByIsDeletedFalse(sort);
+
+        // Convert entities to DTOs
+        return appointments.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     public AppointmentEntity getAppointmentByAppointmentId(int id) {
