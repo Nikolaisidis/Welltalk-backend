@@ -159,6 +159,15 @@ public class AppointmentController {
                 HttpStatus.OK);
     }
 
+    @GetMapping("/getAppointmentsByDateAndAssignedCounselors")
+    public ResponseEntity<?> getAppointmentsByDateAndAssignedCounselors(
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam("studentId") int studentId) {
+        return new ResponseEntity<>(appointmentService.getAppointmentsByDateAndAssignedCounselors(date, studentId),
+                HttpStatus.OK);
+    }
+
+
     @GetMapping("/checkCounselorAppointmentIsTaken")
     public ResponseEntity<Boolean> checkCounselorAppointmentIsTaken(
             @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
