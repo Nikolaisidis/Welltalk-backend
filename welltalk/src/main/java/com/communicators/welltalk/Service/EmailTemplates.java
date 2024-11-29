@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.communicators.welltalk.Entity.AppointmentEntity;
 import com.communicators.welltalk.Entity.ReferralEntity;
-import com.communicators.welltalk.Entity.ReferralEntity;
 
 @Service
 public class EmailTemplates {

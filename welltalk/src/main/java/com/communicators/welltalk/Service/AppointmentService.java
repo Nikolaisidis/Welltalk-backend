@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.tomcat.jni.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -488,6 +487,17 @@ public class AppointmentService {
 
         return appointments;
     }
+
+    public long getAppointmentCountByCounselorId(int counselorId) {
+        CounselorEntity counselor = counselorRepository.findByIdAndIsDeletedFalse(counselorId)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Counselor with ID " + counselorId + " does not exist or is deleted."));
+
+        List<AppointmentEntity> appointments = appointmentRepository.findByCounselorOrOutsideCounselor(counselor, counselor);
+
+        return appointments.size();
+    }
+
 
     public boolean checkCounselorAppointmentIsTaken(LocalDate date, String startTime, int counselorId) {
         CounselorEntity counselor = counselorService.getCounselorById(counselorId);

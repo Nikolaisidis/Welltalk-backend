@@ -11,13 +11,11 @@ import org.springframework.stereotype.Service;
 
 import com.communicators.welltalk.Entity.AssignedCounselorEntity;
 import com.communicators.welltalk.Entity.ChatEntity;
-import com.communicators.welltalk.Entity.ChatEntity;
 import com.communicators.welltalk.Entity.CounselorEntity;
 import com.communicators.welltalk.Entity.StudentEntity;
 import com.communicators.welltalk.Entity.TeacherEntity;
 import com.communicators.welltalk.Entity.UserEntity;
 import com.communicators.welltalk.Repository.AssignedCounselorRepository;
-import com.communicators.welltalk.Repository.ChatRepository;
 import com.communicators.welltalk.Repository.ChatRepository;
 import com.communicators.welltalk.Repository.CounselorRepository;
 import com.communicators.welltalk.Repository.StudentRepository;
@@ -209,26 +207,52 @@ public class AssignedCounselorService {
         }
     }
 
-public List<AssignedCounselorEntity> getByCounselorId(int counselorId) {
-    CounselorEntity counselor = counselorRepository.findById(counselorId)
-            .orElseThrow(() -> new EntityNotFoundException("Counselor not found"));
-    
-    return assignedCounselorRepository.findByCounselorId(counselor);
-}
+    public long getNumberOfStudentsAssignedToCounselor(int counselorId) {
+        CounselorEntity counselor = counselorRepository.findById(counselorId)
+                .orElseThrow(() -> new EntityNotFoundException("Counselor not found"));
 
-public List<AssignedCounselorEntity> getByStudentId(int studentId) {
-    StudentEntity student = studentRepository.findById(studentId)
-            .orElseThrow(() -> new EntityNotFoundException("Student not found"));
-    
-    return assignedCounselorRepository.findByStudentId(student);
-}
+        List<AssignedCounselorEntity> assignments = assignedCounselorRepository.findByCounselorId(counselor);
 
-public List<AssignedCounselorEntity> getByTeacherId(int teacherId) {
-    TeacherEntity teacher = teacherRepository.findById(teacherId)
-            .orElseThrow(() -> new EntityNotFoundException("Teacher not found"));
-    
-    return assignedCounselorRepository.findByTeacherId(teacher);
-}
+        return assignments.stream()
+                .filter(assignment -> assignment.getStudentId() != null)
+                .count();
+    }
+
+    public long getNumberOfTeachersAssignedToCounselor(int counselorId) {
+        // Find the counselor by ID
+        CounselorEntity counselor = counselorRepository.findById(counselorId)
+                .orElseThrow(() -> new EntityNotFoundException("Counselor not found"));
+
+        // Fetch assignments based on the counselor's ID
+        List<AssignedCounselorEntity> assignments = assignedCounselorRepository.findByCounselorId(counselor);
+
+        // Count the number of assignments where a teacher is assigned
+        return assignments.stream()
+                .filter(assignment -> assignment.getTeacherId() != null)
+                .count();
+    }
+
+
+    public List<AssignedCounselorEntity> getByCounselorId(int counselorId) {
+        CounselorEntity counselor = counselorRepository.findById(counselorId)
+                .orElseThrow(() -> new EntityNotFoundException("Counselor not found"));
+        
+        return assignedCounselorRepository.findByCounselorId(counselor);
+    }
+
+    public List<AssignedCounselorEntity> getByStudentId(int studentId) {
+        StudentEntity student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new EntityNotFoundException("Student not found"));
+        
+        return assignedCounselorRepository.findByStudentId(student);
+    }
+
+    public List<AssignedCounselorEntity> getByTeacherId(int teacherId) {
+        TeacherEntity teacher = teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new EntityNotFoundException("Teacher not found"));
+        
+        return assignedCounselorRepository.findByTeacherId(teacher);
+    }
 
     public Optional<StudentEntity> getStudentById(int studentId) {
         return studentRepository.findById(studentId);
@@ -242,3 +266,5 @@ public List<AssignedCounselorEntity> getByTeacherId(int teacherId) {
         return counselorRepository.findById(counselorId);
     }
 }
+
+

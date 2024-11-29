@@ -68,7 +68,6 @@ public class AssignedCounselorController {
         }
     }
 
-
     @GetMapping("/getCounselorByReceiverId/{receiverId}")
     public ResponseEntity<List<CounselorEntity>> getCounselorByReceiverId(@PathVariable int receiverId) {
         List<CounselorEntity> counselors = assignedCounselorService.getCounselorsByReceiverId(receiverId);
@@ -78,4 +77,15 @@ public class AssignedCounselorController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/getAssignedCounselorStudentCount/{counselorId}")
+    public long getAssignedCounselorStudentCount(@PathVariable int counselorId) {
+        return assignedCounselorService.getNumberOfStudentsAssignedToCounselor(counselorId);
+    }
+
+    @GetMapping("/getAssignedCounselorTeacherCount/{counselorId}")
+    public long getAssignedCounselorTeacherCount(@PathVariable int counselorId) {
+        return assignedCounselorService.getNumberOfTeachersAssignedToCounselor(counselorId);
+    }
+
 }

@@ -11,9 +11,9 @@ import com.communicators.welltalk.Entity.PostEntity;
 import com.communicators.welltalk.Entity.ReferralEntity;
 import com.communicators.welltalk.Entity.StudentEntity;
 import com.communicators.welltalk.Entity.UserEntity;
+import com.communicators.welltalk.Repository.AppointmentRepository;
 import com.communicators.welltalk.Repository.NotificationsRepository;
 import com.communicators.welltalk.dto.NotificationsDTO;
-import com.communicators.welltalk.Repository.AppointmentRepository;
 
 @Service
 public class NotificationsService {
