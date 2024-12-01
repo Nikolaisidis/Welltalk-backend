@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,12 +111,14 @@ public class AppointmentService {
         appointment.setStudent(student);
         appointment.setAppointmentStatus("Pending");
 
-        // Assign available counselor based on assigned counselor service
         List<AssignedCounselorEntity> assignedCounselors = assignedCounselorService.getByStudentId(student.getId());
-        CounselorEntity availableCounselor = findAvailableCounselor(assignedCounselors,
+        List<CounselorEntity> availableCounselors = findAvailableCounselors(assignedCounselors,
                 appointment.getAppointmentDate(), appointment.getAppointmentStartTime());
-        if (availableCounselor != null) {
-            appointment.setCounselor(availableCounselor);
+
+        if (!availableCounselors.isEmpty()) {
+            Random random = new Random();
+            CounselorEntity selectedCounselor = availableCounselors.get(random.nextInt(availableCounselors.size()));
+            appointment.setCounselor(selectedCounselor);
         } else {
             throw new IllegalArgumentException("No available counselor for the selected timeslot.");
         }
@@ -200,15 +203,17 @@ public class AppointmentService {
     }
 
     // Available Counselor
-    private CounselorEntity findAvailableCounselor(List<AssignedCounselorEntity> assignedCounselors, LocalDate date,
+    private List<CounselorEntity> findAvailableCounselors(List<AssignedCounselorEntity> assignedCounselors,
+            LocalDate date,
             String startTime) {
+        List<CounselorEntity> availableCounselors = new ArrayList<>();
         for (AssignedCounselorEntity assignedCounselor : assignedCounselors) {
             CounselorEntity counselor = assignedCounselor.getCounselorId();
             if (counselor != null && !isCounselorBusy(counselor, date, startTime)) {
-                return counselor;
+                availableCounselors.add(counselor);
             }
         }
-        return null;
+        return availableCounselors;
     }
 
     private boolean isCounselorBusy(CounselorEntity counselor, LocalDate date, String startTime) {
@@ -294,31 +299,31 @@ public class AppointmentService {
         return appointments;
     }
 
-public List<AppointmentEntity> getAppointmentsByDateAndAssignedCounselors(LocalDate date, int studentId) {
-    List<AssignedCounselorEntity> assignedCounselors = assignedCounselorService.getByStudentId(studentId);
-    List<AppointmentEntity> appointments = new ArrayList<>();
+    public List<AppointmentEntity> getAppointmentsByDateAndAssignedCounselors(LocalDate date, int studentId) {
+        List<AssignedCounselorEntity> assignedCounselors = assignedCounselorService.getByStudentId(studentId);
+        List<AppointmentEntity> appointments = new ArrayList<>();
 
-    for (AssignedCounselorEntity assignedCounselor : assignedCounselors) {
-        CounselorEntity counselor = assignedCounselor.getCounselorId();
-        if (counselor != null) {
-            List<AppointmentEntity> counselorAppointments = appointmentRepository
-                    .findByCounselorAndAppointmentDateAndIsDeletedFalse(counselor, date);
-            if (counselorAppointments.isEmpty()) {
-                // Add a placeholder to indicate the counselor is available
-                AppointmentEntity placeholderAppointment = new AppointmentEntity();
-                placeholderAppointment.setCounselor(counselor);
-                placeholderAppointment.setAppointmentDate(date);
-                placeholderAppointment.setAppointmentStartTime("00:00"); 
-                placeholderAppointment.setAppointmentStatus("Available");
-                appointments.add(placeholderAppointment);
-            } else {
-                appointments.addAll(counselorAppointments);
+        for (AssignedCounselorEntity assignedCounselor : assignedCounselors) {
+            CounselorEntity counselor = assignedCounselor.getCounselorId();
+            if (counselor != null) {
+                List<AppointmentEntity> counselorAppointments = appointmentRepository
+                        .findByCounselorAndAppointmentDateAndIsDeletedFalse(counselor, date);
+                if (counselorAppointments.isEmpty()) {
+                    // Add a placeholder to indicate the counselor is available
+                    AppointmentEntity placeholderAppointment = new AppointmentEntity();
+                    placeholderAppointment.setCounselor(counselor);
+                    placeholderAppointment.setAppointmentDate(date);
+                    placeholderAppointment.setAppointmentStartTime("00:00");
+                    placeholderAppointment.setAppointmentStatus("Available");
+                    appointments.add(placeholderAppointment);
+                } else {
+                    appointments.addAll(counselorAppointments);
+                }
             }
         }
-    }
 
-    return appointments;
-}
+        return appointments;
+    }
 
     public boolean checkAppointmentIsTaken(LocalDate date, String startTime) {
         return appointmentRepository.existsByAppointmentDateAndAppointmentStartTimeAndIsDeletedFalse(date, startTime);
@@ -520,11 +525,11 @@ public List<AppointmentEntity> getAppointmentsByDateAndAssignedCounselors(LocalD
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Counselor with ID " + counselorId + " does not exist or is deleted."));
 
-        List<AppointmentEntity> appointments = appointmentRepository.findByCounselorOrOutsideCounselor(counselor, counselor);
+        List<AppointmentEntity> appointments = appointmentRepository.findByCounselorOrOutsideCounselor(counselor,
+                counselor);
 
         return appointments.size();
     }
-
 
     public boolean checkCounselorAppointmentIsTaken(LocalDate date, String startTime, int counselorId) {
         CounselorEntity counselor = counselorService.getCounselorById(counselorId);
