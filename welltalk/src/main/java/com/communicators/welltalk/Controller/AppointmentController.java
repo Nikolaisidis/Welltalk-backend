@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.communicators.welltalk.Entity.AppointmentEntity;
 import com.communicators.welltalk.Service.AppointmentService;
 import com.communicators.welltalk.Service.NotificationsService;
+import com.communicators.welltalk.dto.AppointmentGetDateResponseDTO;
 import com.communicators.welltalk.dto.AppointmentResponseDTO;
 
 @CrossOrigin("http://localhost:3000")
@@ -79,7 +80,8 @@ public class AppointmentController {
     // TO NOTE: This method is temporarily commented to test APPOINTMENT DTO
     // @GetMapping("/getAllAppointments")
     // public ResponseEntity<?> getAllAppointments() {
-    //     return new ResponseEntity<>(appointmentService.getAllAppointments(), HttpStatus.OK);
+    // return new ResponseEntity<>(appointmentService.getAllAppointments(),
+    // HttpStatus.OK);
     // }
 
     @GetMapping("/getAllAppointments")
@@ -94,8 +96,9 @@ public class AppointmentController {
     }
 
     @GetMapping("/getAppointmentsByStudent")
-    public ResponseEntity<?> getAppointmentsByStudent(@RequestParam int studentId) {
-        return new ResponseEntity<>(appointmentService.getAppointmentsByStudent(studentId), HttpStatus.OK);
+    public ResponseEntity<List<AppointmentResponseDTO>> getAppointmentsByStudent(@RequestParam int studentId) {
+        List<AppointmentResponseDTO> appointments = appointmentService.getAppointmentsByStudent(studentId);
+        return ResponseEntity.ok(appointments);
     }
 
     @PutMapping("/updateAppointment/{id}")
@@ -160,21 +163,21 @@ public class AppointmentController {
     }
 
     @GetMapping("/getAppointmentsByDateAndAssignedCounselors")
-    public ResponseEntity<?> getAppointmentsByDateAndAssignedCounselors(
+    public ResponseEntity<List<AppointmentGetDateResponseDTO>> getAppointmentsByDateAndAssignedCounselors(
             @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
             @RequestParam("studentId") int studentId) {
-        return new ResponseEntity<>(appointmentService.getAppointmentsByDateAndAssignedCounselors(date, studentId),
-                HttpStatus.OK);
+        List<AppointmentGetDateResponseDTO> appointments = appointmentService
+                .getAppointmentsByDateAndAssignedCounselors(date, studentId);
+        return ResponseEntity.ok(appointments);
     }
 
-
-    // @GetMapping("/checkCounselorAppointmentIsTaken")
-    // public ResponseEntity<Boolean> checkCounselorAppointmentIsTaken(
-    //         @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-    //         @RequestParam("startTime") String startTime, @RequestParam("counselorId") int counselorId) {
-    //     boolean isTaken = appointmentService.checkCounselorAppointmentIsTaken(date, startTime, counselorId);
-    //     return new ResponseEntity<>(isTaken, HttpStatus.OK);
-    // }
+    @GetMapping("/checkCounselorAppointmentIsTaken")
+    public ResponseEntity<Boolean> checkCounselorAppointmentIsTaken(
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam("startTime") String startTime, @RequestParam("counselorId") int counselorId) {
+        boolean isTaken = appointmentService.checkCounselorAppointmentIsTaken(date, startTime, counselorId);
+        return new ResponseEntity<>(isTaken, HttpStatus.OK);
+    }
 
     @PostMapping("/saveReferralAppointment")
     public ResponseEntity<AppointmentEntity> saveReferralAppointment(@RequestParam int referralId,

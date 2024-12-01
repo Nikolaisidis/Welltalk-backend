@@ -23,6 +23,7 @@ import com.communicators.welltalk.Entity.StudentEntity;
 import com.communicators.welltalk.Repository.AppointmentRepository;
 import com.communicators.welltalk.Repository.CounselorRepository;
 import com.communicators.welltalk.Repository.ReferralRepository;
+import com.communicators.welltalk.dto.AppointmentGetDateResponseDTO;
 import com.communicators.welltalk.dto.AppointmentResponseDTO;
 import com.communicators.welltalk.dto.CounselorResponseDTO;
 import com.communicators.welltalk.dto.StudentResponseDTO;
@@ -297,31 +298,34 @@ public class AppointmentService {
         return appointments;
     }
 
-    public List<AppointmentEntity> getAppointmentsByDateAndAssignedCounselors(LocalDate date, int studentId) {
-        List<AssignedCounselorEntity> assignedCounselors = assignedCounselorService.getByStudentId(studentId);
-        List<AppointmentEntity> appointments = new ArrayList<>();
+   public List<AppointmentGetDateResponseDTO> getAppointmentsByDateAndAssignedCounselors(LocalDate date, int studentId) {
+    List<AssignedCounselorEntity> assignedCounselors = assignedCounselorService.getByStudentId(studentId);
+    List<AppointmentGetDateResponseDTO> appointments = new ArrayList<>();
 
-        for (AssignedCounselorEntity assignedCounselor : assignedCounselors) {
-            CounselorEntity counselor = assignedCounselor.getCounselorId();
-            if (counselor != null) {
-                List<AppointmentEntity> counselorAppointments = appointmentRepository
-                        .findByCounselorAndAppointmentDateAndIsDeletedFalse(counselor, date);
-                if (counselorAppointments.isEmpty()) {
-                    // Add a placeholder to indicate the counselor is available
-                    AppointmentEntity placeholderAppointment = new AppointmentEntity();
-                    placeholderAppointment.setCounselor(counselor);
-                    placeholderAppointment.setAppointmentDate(date);
-                    placeholderAppointment.setAppointmentStartTime("00:00");
-                    placeholderAppointment.setAppointmentStatus("Available");
-                    appointments.add(placeholderAppointment);
-                } else {
-                    appointments.addAll(counselorAppointments);
-                }
+    for (AssignedCounselorEntity assignedCounselor : assignedCounselors) {
+        CounselorEntity counselor = assignedCounselor.getCounselorId();
+        if (counselor != null) {
+            List<AppointmentEntity> counselorAppointments = appointmentRepository
+                    .findByCounselorAndAppointmentDateAndIsDeletedFalse(counselor, date);
+            if (counselorAppointments.isEmpty()) {
+                // Add a placeholder to indicate the counselor is available
+                AppointmentGetDateResponseDTO placeholderAppointment = new AppointmentGetDateResponseDTO();
+                placeholderAppointment.setAppointmentDate(date);
+                placeholderAppointment.setAppointmentStartTime("00:00");
+                appointments.add(placeholderAppointment);
+            } else {
+                appointments.addAll(counselorAppointments.stream()
+                        .map(appointment -> new AppointmentGetDateResponseDTO(
+                                appointment.getAppointmentDate(),
+                                appointment.getAppointmentStartTime()))
+                        .collect(Collectors.toList()));
             }
         }
-
-        return appointments;
     }
+
+    return appointments;
+}
+
 
     public boolean checkAppointmentIsTaken(LocalDate date, String startTime) {
         return appointmentRepository.existsByAppointmentDateAndAppointmentStartTimeAndIsDeletedFalse(date, startTime);
@@ -406,16 +410,16 @@ public class AppointmentService {
         return appointmentRepository.findByAppointmentIdAndIsDeletedFalse(id).get();
     }
 
-    public List<AppointmentEntity> getAppointmentsByStudent(int studentId) {
+    public List<AppointmentResponseDTO> getAppointmentsByStudent(int studentId) {
         StudentEntity student = studentService.getStudentById(studentId);
         List<AppointmentEntity> appointments = appointmentRepository.findByStudent(student);
-
-        // Sort appointments by appointmentDate and appointmentStartTime in descending
-        // order
+    
         appointments.sort(Comparator.comparing(AppointmentEntity::getAppointmentDate)
                 .thenComparing(AppointmentEntity::getAppointmentStartTime));
-
-        return appointments;
+    
+        return appointments.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @SuppressWarnings("finally")
