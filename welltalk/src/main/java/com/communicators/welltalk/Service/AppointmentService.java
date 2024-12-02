@@ -319,7 +319,8 @@ public class AppointmentService {
                 appointments.addAll(counselorAppointments.stream()
                         .map(appointment -> new AppointmentGetDateResponseDTO(
                                 appointment.getAppointmentDate(),
-                                appointment.getAppointmentStartTime()))
+                                appointment.getAppointmentStartTime(),
+                                appointment.getStudent().getId()))
                         .collect(Collectors.toList()));
             }
         }
