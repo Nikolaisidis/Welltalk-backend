@@ -11,6 +11,9 @@ import com.communicators.welltalk.Entity.CounselorEntity;
 import com.communicators.welltalk.Repository.AssignedCounselorRepository;
 import com.communicators.welltalk.Repository.CounselorRepository;
 import com.communicators.welltalk.dto.CounselorResponseDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 
 @Service
 public class CounselorService {
@@ -23,6 +26,9 @@ public class CounselorService {
 
     @Autowired
     AssignedCounselorService assignedCounselorService;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
 
     public CounselorEntity saveCounselor(CounselorEntity counselor) {
         CounselorEntity savedCounselor = counselorRepository.save(counselor);
@@ -44,6 +50,8 @@ public class CounselorService {
             dto.setProgram(counselor.getProgram());
             dto.setCollege(counselor.getCollege());
             dto.setAssignedYear(counselor.getAssignedYear());
+            dto.setStatus(counselor.getStatus());
+            dto.setUnavailableDates(counselor.getUnavailableDates());
             dto.setRole(counselor.getRole());
             dto.setIdNumber(counselor.getIdNumber());
             
@@ -97,6 +105,26 @@ public class CounselorService {
             counselorToUpdate.setProgram(counselor.getProgram());
             counselorToUpdate.setCollege(counselor.getCollege());
             counselorToUpdate.setAssignedYear(counselor.getAssignedYear());
+            counselorToUpdate.setStatus(counselor.getStatus());
+            counselorToUpdate.setUnavailableDates(counselor.getUnavailableDates());
+            
+            // String newUnavailableDates = counselor.getUnavailableDates();
+            // if (newUnavailableDates != null && !newUnavailableDates.isEmpty()) {
+            //     // Append the new unavailable dates to the current ones
+            //     String currentUnavailableDates = counselorToUpdate.getUnavailableDates();
+            //     if (currentUnavailableDates != null && !currentUnavailableDates.isEmpty()) {
+            //         // Append new dates separated by a comma
+            //         counselorToUpdate.setUnavailableDates(currentUnavailableDates + "," + newUnavailableDates);
+            //     } else {
+            //         // If no current dates, set the new dates
+            //         counselorToUpdate.setUnavailableDates(newUnavailableDates);
+            //     }
+            // } else {
+            //     // If no new dates are provided, retain the current dates
+            //     // This part is optional depending on your requirement
+            //     counselorToUpdate.setUnavailableDates(counselorToUpdate.getUnavailableDates());
+            // }
+    
 
             counselorToUpdate = counselorRepository.save(counselorToUpdate);
 
@@ -118,6 +146,32 @@ public class CounselorService {
             System.out.println("Counselor " + id + " does not exist.");
             return false;
         }
+    }
+
+    public void addUnavailableDates(int counselorId, String newDates) {
+        CounselorEntity counselor = counselorRepository.findByIdAndIsDeletedFalse(counselorId)
+                .orElseThrow(() -> new IllegalArgumentException("Counselor not found"));
+
+        String currentUnavailableDates = counselor.getUnavailableDates();
+        if (currentUnavailableDates != null && !currentUnavailableDates.isEmpty()) {
+            // Append the new dates (comma-separated)
+            counselor.setUnavailableDates(currentUnavailableDates + "," + newDates);
+        } else {
+            // If no dates are present, set the new dates
+            counselor.setUnavailableDates(newDates);
+        }
+
+        counselorRepository.save(counselor);
+    } 
+
+    // Retrieve the unavailable dates as an array
+    public String[] getUnavailableDates(int counselorId) {
+        CounselorEntity counselor = counselorRepository.findByIdAndIsDeletedFalse(counselorId)
+                .orElseThrow(() -> new IllegalArgumentException("Counselor not found"));
+
+        // Split the comma-separated string into an array
+        String unavailableDates = counselor.getUnavailableDates();
+        return unavailableDates != null ? unavailableDates.split(",") : new String[0];
     }
 
 }

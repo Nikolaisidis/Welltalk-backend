@@ -15,6 +15,8 @@ public class CounselorResponseDTO {
   private String college;
   private String program;
   private String assignedYear;
+  private String status;
+  private String unavailableDates;
   private LocalDateTime dateOfCreation;
 
 
@@ -22,7 +24,7 @@ public class CounselorResponseDTO {
   public CounselorResponseDTO() {
   }
   
-  public CounselorResponseDTO( int id,String institutionalEmail, String firstName, String lastName, String image, Role role, String idNumber, String college, String program,String assignedYear, LocalDateTime dateOfCreation) {
+  public CounselorResponseDTO( int id,String institutionalEmail, String firstName, String lastName, String image, Role role, String idNumber, String college, String program,String assignedYear, String status, String unavailableDates, LocalDateTime dateOfCreation) {
     
     this.id = id;
     this.institutionalEmail = institutionalEmail;
@@ -34,6 +36,8 @@ public class CounselorResponseDTO {
     this.college = college;
     this.program = program;
     this.assignedYear = assignedYear;
+    this.status = status;
+    this.unavailableDates = unavailableDates;
     this.dateOfCreation = dateOfCreation;
   
   }
@@ -107,6 +111,22 @@ public class CounselorResponseDTO {
 
   public void setAssignedYear(String assignedYear) {
     this.assignedYear = assignedYear;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
+
+  public String getUnavailableDates() {
+    return unavailableDates;
+  }
+
+  public void setUnavailableDates(String unavailableDates) {
+    this.unavailableDates = unavailableDates;
   }
 
   public LocalDateTime getDateOfCreation() {
