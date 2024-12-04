@@ -90,6 +90,12 @@ public class AppointmentController {
         return ResponseEntity.ok(appointments);
     }
 
+    @GetMapping("/getDoneAppointments")
+    public ResponseEntity<List<AppointmentResponseDTO>> getDoneAppointments() {
+        List<AppointmentResponseDTO> appointments = appointmentService.getDoneAppointments();
+        return ResponseEntity.ok(appointments);
+    }
+
     @GetMapping("/getAppointmentById/{id}")
     public ResponseEntity<AppointmentEntity> getAppointmentById(@PathVariable int id) {
         return new ResponseEntity<>(appointmentService.getAppointmentByAppointmentId(id), HttpStatus.OK);
