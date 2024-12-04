@@ -552,4 +552,11 @@ public class AppointmentService {
         return appointmentRepository.save(appointment);
     }
 
+    public List<AppointmentResponseDTO> getDoneAppointments() {
+        List<AppointmentEntity> appointments = appointmentRepository.findByAppointmentStatusAndIsDeletedFalse("Done");
+        return appointments.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
 }

@@ -1,15 +1,16 @@
 package com.communicators.welltalk.Repository;
 
-import com.communicators.welltalk.Entity.AppointmentEntity;
-import com.communicators.welltalk.Entity.CounselorEntity;
-import com.communicators.welltalk.Entity.StudentEntity;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import com.communicators.welltalk.Entity.AppointmentEntity;
+import com.communicators.welltalk.Entity.CounselorEntity;
+import com.communicators.welltalk.Entity.StudentEntity;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<AppointmentEntity, Integer> {
@@ -38,5 +39,7 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
 
         boolean existsByCounselorAndAppointmentDateAndAppointmentStartTimeAndIsDeletedFalse(CounselorEntity counselor,
                         LocalDate date, String startTime);
+
+        List<AppointmentEntity> findByAppointmentStatusAndIsDeletedFalse(String status);
 
 }
