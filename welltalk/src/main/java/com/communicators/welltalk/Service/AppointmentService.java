@@ -387,6 +387,7 @@ public class AppointmentService {
         dto.setAppointmentStartTime(appointment.getAppointmentStartTime());
         dto.setAppointmentStatus(appointment.getAppointmentStatus());
         dto.setAppointmentType(appointment.getAppointmentType());
+        dto.setAppointmentNotes(appointment.getAppointmentNotes());
         dto.setAppointmentPurpose(appointment.getAppointmentPurpose());
         dto.setAppointmentAdditionalNotes(appointment.getAppointmentAdditionalNotes());
 
