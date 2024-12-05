@@ -32,6 +32,7 @@ import com.communicators.welltalk.dto.IdNumberCheckDTO;
 import com.communicators.welltalk.dto.PasswordChangeDTO;
 import com.communicators.welltalk.dto.PasswordVerificationDTO;
 import com.communicators.welltalk.dto.UserResponseDTO;
+import com.communicators.welltalk.Service.EmailTemplates;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
@@ -55,6 +56,9 @@ public class UserController {
 
     @Autowired
     public EmailService emailService;
+
+    @Autowired
+    public EmailTemplates emailTemplates;
 
     public UserController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
@@ -94,13 +98,10 @@ public class UserController {
         String token = UUID.randomUUID().toString();
         passwordReset.createPasswordResetTokenForUser(user, token);
 
-        String message = "Here is the link to reset your password: https://well-talk-ten.vercel.app/" + token
+        String link = "https://well-talk-ten.vercel.app/" + token
                 + "/changepassword";
 
-        emailService.sendSimpleMessage(
-                email,
-                "Password Reset Request",
-                message);
+        emailTemplates.sendForgotPasswordEmail(link, email);
 
         return ResponseEntity.ok("Reset password email sent.");
     }

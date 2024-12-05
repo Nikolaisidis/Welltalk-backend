@@ -621,4 +621,184 @@ public class EmailTemplates {
 
     }
 
+    public String sendForgotPasswordEmail(String resetLink, String recipientEmail) {
+        String subject = "Forgot Password";
+        String htmlContent = "<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "  <head>\n" +
+                "    <title>Password Reset</title>\n" +
+                "    <style>\n" +
+                "      body {\n" +
+                "        margin: 0;\n" +
+                "        padding: 0;\n" +
+                "        font-family: Arial, sans-serif;\n" +
+                "        background-color: #f4f4f4;\n" +
+                "      }\n" +
+                "    </style>\n" +
+                "  </head>\n" +
+                "  <body>\n" +
+                "    <table align=\"center\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #f4f4f4; padding: 20px\">\n"
+                +
+                "      <tr>\n" +
+                "        <td align=\"center\">\n" +
+                "          <table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #ffffff; padding: 20px\">\n"
+                +
+                "            <tr>\n" +
+                "              <td align=\"center\" style=\"padding: 20px\">\n" +
+                "                <img src=\"cid:imageId1\" alt=\"Logo\" width=\"150\" style=\"display: block; margin: 0 auto\" />\n"
+                +
+                "              </td>\n" +
+                "            </tr>\n" +
+                "            <tr>\n" +
+                "              <td align=\"center\" style=\"padding: 20px\">\n" +
+                "                <img src=\"cid:imageId2\" alt=\"Forgot Password\" width=\"100\" height=\"100\" style=\"display: block; margin: 0 auto\" />\n"
+                +
+                "              </td>\n" +
+                "            </tr>\n" +
+                "            <tr>\n" +
+                "              <td align=\"center\">\n" +
+                "                <p style=\"font-size: 25px; font-weight: bold; color: #474647; margin: 10px 0;\">\n" +
+                "                  Forgot Your Password?\n" +
+                "                </p>\n" +
+                "                <hr style=\"border: 1px solid #8a252c; width: 30%; margin: 10px auto;\" />\n" +
+                "                <p style=\"font-size: 12px; color: #474647; line-height: 1.5; margin: 20px;\">\n" +
+                "                  No worries! We’ve got you covered. You requested to reset your password for your WellTalk account.\n"
+                +
+                "                  <br /><br />\n" +
+                "                  Click the button below to reset your password. If you didn’t request a password reset, you can safely ignore this email.\n"
+                +
+                "                </p>\n" +
+                "                <a href=\"" + resetLink
+                + "\" style=\"background-color: #8a252c; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;\">\n"
+                +
+                "                  Reset Password\n" +
+                "                </a>\n" +
+                "                <p style=\"font-size: 12px; color: #474647; margin-top: 10px\">\n" +
+                "                  If the button isn't clickable, please use the following link instead:\n" +
+                "                  <a href=\"" + resetLink + "\" style=\"color: #8a252c\">" + resetLink + "</a>\n" +
+                "                </p>\n" +
+                "                <p style=\"font-size: 12px; color: #474647; margin-top: 20px\">\n" +
+                "                  If you have any issues, feel free to contact our support team at\n" +
+                "                  <a href=\"mailto:support@welltalk.com\" style=\"color: #8a252c\">cit.welltalk@gmail.com</a>.\n"
+                +
+                "                </p>\n" +
+                "              </td>\n" +
+                "            </tr>\n" +
+                "          </table>\n" +
+                "        </td>\n" +
+                "      </tr>\n" +
+                "    </table>\n" +
+                "  </body>\n" +
+                "</html>";
+
+        String image1Path = "static/images/logowords.png";
+        String image2Path = "static/images/password.png";
+
+        try {
+            emailService.sendHtmlMessage(recipientEmail, subject, htmlContent, image1Path, image2Path);
+            return "Email sent successfully";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Failed to send email: " + e.getMessage();
+        }
+    }
+
+    public String studentUpdateAppointment(AppointmentEntity appointment) {
+        String subject = "Appointment Updated";
+        String htmlContent = "<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "  <head>\n" +
+                "    <title>Appointment Update</title>\n" +
+                "    <style>\n" +
+                "      body {\n" +
+                "        margin: 0;\n" +
+                "        padding: 0;\n" +
+                "        background-color: #f4f4f4;\n" +
+                "      }\n" +
+                "    </style>\n" +
+                "  </head>\n" +
+                "  <body>\n" +
+                "    <table align=\"center\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #f4f4f4; padding: 20px;\">\n"
+                +
+                "      <tr>\n" +
+                "        <td align=\"center\">\n" +
+                "          <table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #ffffff; padding: 20px;\">\n"
+                +
+                "            <tr>\n" +
+                "              <td align=\"center\" style=\"padding: 20px;\">\n" +
+                "                <img src=\"cid:imageId1\" alt=\"Logo\" width=\"150\" style=\"display: block; margin: 0 auto;\" />\n"
+                +
+                "              </td>\n" +
+                "            </tr>\n" +
+                "            <tr>\n" +
+                "              <td align=\"center\" style=\"padding: 20px;\">\n" +
+                "                <img src=\"cid:imageId2\" alt=\"Appointment Update\" width=\"100\" height=\"100\" style=\"display: block; margin: 0 auto;\" />\n"
+                +
+                "              </td>\n" +
+                "            </tr>\n" +
+                "            <tr>\n" +
+                "              <td align=\"center\">\n" +
+                "                <h2 style=\"font-size: 22px; font-weight: bold; color: #474647; margin: 10px 0;\">Appointment Update</h2>\n"
+                +
+                "                <hr style=\"border: 1px solid #8a252c; width: 30%; margin: 10px auto;\" />\n" +
+                "                <p style=\"font-size: 14px; color: #474647; line-height: 1.5; margin: 20px;\">\n" +
+                "                  <strong>Dear " + appointment.getStudent().getFirstName() + " "
+                + appointment.getStudent().getLastName() + ",</strong><br /><br />\n" +
+                "                  Your appointment has been updated. Please find the revised details below:\n" +
+                "                </p>\n" +
+                "                <table align=\"center\" width=\"80%\" cellpadding=\"5\" cellspacing=\"0\" style=\"border: 1px solid #ddd; border-radius: 5px; margin-bottom: 20px;\">\n"
+                +
+                "                  <tr>\n" +
+                "                    <td><strong>New Date:</strong></td>\n" +
+                "                    <td>" + appointment.getAppointmentDate() + "</td>\n" +
+                "                  </tr>\n" +
+                "                  <tr>\n" +
+                "                    <td><strong>New Time:</strong></td>\n" +
+                "                    <td>" + appointment.getAppointmentStartTime() + "</td>\n" +
+                "                  </tr>\n" +
+                "                  <tr>\n" +
+                "                    <td><strong>Counselor:</strong></td>\n" +
+                "                    <td>" + appointment.getCounselor().getFirstName() + " "
+                + appointment.getCounselor().getLastName() + "</td>\n" +
+                "                  </tr>\n" +
+                "                  <tr>\n" +
+                "                    <td><strong>Location:</strong></td>\n" +
+                "                    <td>Guidance Office, RTL Building</td>\n" +
+                "                  </tr>\n" +
+                "                </table>\n" +
+                "                <a href=\"" + base_link
+                + "student/appointment\" style=\"background-color: #8a252c; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;\">View Appointment</a>\n"
+                +
+                "                <p style=\"font-size: 12px; color: #474647; margin-top: 10px;\">\n" +
+                "                  If the button isn't clickable, please use the following link instead: <a href=\""
+                + base_link + "student/appointment\" style=\"color: #8a252c;\">" + base_link
+                + "student/appointment</a>\n" +
+                "                </p>\n" +
+                "                <p style=\"font-size: 12px; color: #474647; margin: 30px 0 10px; text-align: center;\">\n"
+                +
+                "                  Thank you for choosing WellTalk. We apologize for any inconvenience caused by this change.\n"
+                +
+                "                </p>\n" +
+                "              </td>\n" +
+                "            </tr>\n" +
+                "          </table>\n" +
+                "        </td>\n" +
+                "      </tr>\n" +
+                "    </table>\n" +
+                "  </body>\n" +
+                "</html>";
+
+        String image1Path = "static/images/logowords.png";
+        String image2Path = "static/images/appointment.png";
+
+        try {
+            emailService.sendHtmlMessage(appointment.getStudent().getInstitutionalEmail(), subject, htmlContent,
+                    image1Path, image2Path);
+            return "Email sent successfully";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Failed to send email: " + e.getMessage();
+        }
+    }
+
 }
