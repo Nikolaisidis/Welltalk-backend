@@ -1,6 +1,7 @@
 package com.communicators.welltalk.Entity;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collection;
 import java.util.List;
 
@@ -66,14 +67,12 @@ public class UserEntity implements UserDetails {
     @Lob
     @Column(name = "program")
     private String program;
-    
+
     @Column(name = "isDeleted")
     private boolean isDeleted;
 
     @Column(name = "isVerified")
     private boolean isVerified;
-
-
 
     public UserEntity() {
 
@@ -204,11 +203,9 @@ public class UserEntity implements UserDetails {
         this.isVerified = isVerified;
     }
 
-
-
     @PrePersist
     protected void onCreate() {
-        dateOfCreation = LocalDateTime.now();
+        dateOfCreation = LocalDateTime.now(ZoneId.of("Asia/Manila"));
     }
 
     public LocalDateTime getDateOfCreation() {
@@ -217,7 +214,7 @@ public class UserEntity implements UserDetails {
 
     @PreUpdate
     protected void onUpdate() {
-        dateOfModification = LocalDateTime.now();
+        dateOfModification = LocalDateTime.now(ZoneId.of("Asia/Manila"));
     }
 
     public LocalDateTime getDateOfModification() {

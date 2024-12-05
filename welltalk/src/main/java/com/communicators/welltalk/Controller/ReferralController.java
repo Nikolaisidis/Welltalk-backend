@@ -152,4 +152,10 @@ public class ReferralController {
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
+    @GetMapping("/getReferralsByStudentId")
+    public ResponseEntity<List<ReferralEntity>> getReferralsByStudentId(@RequestParam int id) {
+        List<ReferralEntity> referrals = referralService.getReferralsByStudentId(id);
+        return new ResponseEntity<>(referrals, HttpStatus.OK);
+    }
+
 }

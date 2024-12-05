@@ -1,6 +1,7 @@
 package com.communicators.welltalk.Entity;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -241,13 +242,13 @@ public class ReferralEntity {
 
     @PrePersist
     protected void onCreate() {
-        dateOfRefferal = LocalDateTime.now();
+        dateOfRefferal = LocalDateTime.now(ZoneId.of("Asia/Manila"));
         status = "Pending";
     }
 
     @PreUpdate
     protected void onUpdate() {
-        dateOfModification = LocalDateTime.now();
+        dateOfModification = LocalDateTime.now(ZoneId.of("Asia/Manila"));
     }
 
     public StudentEntity getStudent() {

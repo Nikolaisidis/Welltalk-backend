@@ -2,6 +2,7 @@ package com.communicators.welltalk.Entity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -141,14 +142,14 @@ public class JournalEntity {
 
     @PrePersist
     public void prePersist() {
-        dateOfEntry = LocalDate.now();
-        timeOfEntry = LocalTime.now();
+        dateOfEntry = LocalDate.now(ZoneId.of("Asia/Manila"));
+        timeOfEntry = LocalTime.now(ZoneId.of("Asia/Manila"));
     }
 
     @PreUpdate
     public void preUpdate() {
-        dateOfUpdate = LocalDate.now();
-        timeOfUpdate = LocalTime.now();
+        dateOfUpdate = LocalDate.now(ZoneId.of("Asia/Manila"));
+        timeOfUpdate = LocalTime.now(ZoneId.of("Asia/Manila"));
     }
 
 }

@@ -199,4 +199,8 @@ public class ReferralService {
         }
     }
 
+    public List<ReferralEntity> getReferralsByStudentId(int id) {
+        return referralRepository.findByStudent_IdAndIsDeletedFalseOrderByReferralIdDesc(id);
+    }
+
 }
