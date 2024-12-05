@@ -57,7 +57,7 @@ public class PostController {
     public ResponseEntity<PostEntity> insertPost(@RequestParam int counselorId, @RequestBody PostEntity post) {
         PostEntity newPost = postService.savePost(counselorId, post);
 
-        notificationsService.createPostNotification(counselorId, newPost);
+        // notificationsService.createPostNotification(counselorId, newPost);
 
         return new ResponseEntity<>(newPost, HttpStatus.CREATED);
     }
