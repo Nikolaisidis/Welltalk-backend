@@ -1,6 +1,7 @@
 package com.communicators.welltalk.Entity;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -106,7 +107,6 @@ public class AppointmentEntity {
         return counselor != null ? counselor : outsideCounselor;
     }
 
-
     public void setCounselor(CounselorEntity counselor) {
         this.counselor = counselor;
     }
@@ -201,11 +201,11 @@ public class AppointmentEntity {
 
     @PrePersist
     public void prePersist() {
-        appointmentBooked = LocalDate.now();
+        appointmentBooked = LocalDate.now(ZoneId.of("Asia/Manila"));
     }
 
     @PreUpdate
     public void preUpdate() {
-        appointmentModified = LocalDate.now();
+        appointmentModified = LocalDate.now(ZoneId.of("Asia/Manila"));
     }
 }
